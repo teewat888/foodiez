@@ -13,10 +13,30 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-      <div class="container-fluid">
-        <h1 class="display-1 font-monospace text-center topSpace"><span style="color:red">F</span><span style="color:green">o</span><span style="color:blue">o</span><span style="color:green">d</span><span style="color:red">i</span><span style="color:green">e</span><span style="color:green">Z</span></h1>
+    <div class="container-fluid">
+      <h1 class="text-center topSpace"><img src="./images/foodiez.png" /></h1>
+      <h6 class="font-monospace text-center d-none d-md-block"></h6>
+      <form>
+        <div class="row mb-3">
+          <div class="col-2 col-sm-3"></div>
+          <div class="col-8 col-sm-6">
+            <input id="searchText" class="form-control" type="text" />
+          </div>
+          <div class="col-2 col-sm-3"></div>
+        </div>
+        <div class="mb-3 text-center pt-3">
+          <button id="searchFood" class="btn-lg btn-danger">
+            FoodieZ search
+          </button>
+        </div>
+      </form>
+      <div id="result-list" class="container-fluid text-center pt-3">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
       </div>
-      <script src="./js/apiKey.js"></script>
-      <script src="./js/index.js"></script>
+    </div>
+    <script src="./js/apiKey.js"></script>
+    <script src="./js/index.js"></script>
   </body>
 </html>

@@ -1,3 +1,11 @@
 .topSpace {
-    padding-top: 20px;
+    padding-top: 50px;
+}
+
+.pt-3 {
+    padding-top: 30px;
+}
+
+.spinner-border {
+    visibility: hidden;
 }
