@@ -9,3 +9,7 @@
 .spinner-border {
     visibility: hidden;
 }
+
+.alert{
+    visibility: hidden;
+}

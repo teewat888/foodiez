@@ -6,25 +6,36 @@
     const config = {
       jokeEnable: false,
     };
-    const searchFood = document.getElementById("searchFood");
+    const searchFoodBtn = document.getElementById("searchFood");
     const searchText = document.getElementById("searchText");
     const resultList = document.getElementById("result-list");
     const spinner = document.querySelector(".spinner-border");
+    const alert = document.querySelector(".alert");
+    const loadMoreBtn = document.createElement("button");
+    let number = 18; //number of result per fetch
+    let offset = 0; // offset for pagination
+
     //events listener
-    searchFood.addEventListener("click", (e) => {
+    searchText.addEventListener("keyup", (e) => {
+      e.preventDefault();
+      if (e.key === "Enter") {
+        spinner.style.visibility = "visible";
+        offset = 0;
+        fetchList(searchText.value);
+      }
+    });
+
+    searchFoodBtn.addEventListener("click", (e) => {
       e.preventDefault();
       spinner.style.visibility = "visible";
       console.log("search text:  ", searchText.value);
-      fetchList(searchText.value)
-        .then((data) => {
-          spinner.style.visibility = "hidden";
-          console.log(data);
-          clearTags();
-          renderList(data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      offset = 0;
+      fetchList(searchText.value);
+    });
+
+    loadMoreBtn.addEventListener("click", () => {
+      offset = offset + number;
+      fetchList(searchText.value);
     });
 
     //functions
@@ -35,8 +46,12 @@
     }
 
     function renderList(data) {
+      //display no search result
+      const totalResults = data.totalResults;
+      //idx to track slice element to get 3 slices each row (idx+3)
       let idx = 0;
-      for (let i = 0; i < 3; i++) {
+      // i to provide the max rows to display each time
+      for (let i = 0; i < 6; i++) {
         const list = document.createElement("div");
         list.setAttribute("class", "row mb-3 text-center");
         let choppedData = data.results.slice(idx, idx + 3);
@@ -54,10 +69,21 @@
         });
         idx = idx + 3;
         resultList.appendChild(list);
+        loadMore(totalResults);
+      }
+    }
+
+    function loadMore(totalResults) {
+      if (totalResults - number - offset > 0) {
+        loadMoreBtn.innerText = "Load more....";
+        resultList.appendChild(loadMoreBtn);
+      } else {
+          loadMoreBtn.remove();
       }
     }
 
     function renderHome() {
+      alert.style.visibility = "hidden";
       if (config.jokeEnable) {
         const joke = document.getElementsByTagName("h6")[0];
         fetchJoke()
@@ -80,8 +106,19 @@
     function fetchList(query) {
       return fetch(
         baseURL +
-          `/recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=9`
-      ).then((resp) => resp.json());
+          `/recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
+      )
+        .then((resp) => resp.json())
+        .then((data) => {
+          spinner.style.visibility = "hidden";
+          console.log(data);
+          renderList(data);
+        })
+        .catch((e) => {
+          console.log(e);
+          alert.style.visibility = "visible";
+          spinner.style.visibility = "hidden";
+        });
     }
 
     renderHome();
