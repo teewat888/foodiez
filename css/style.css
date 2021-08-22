@@ -13,3 +13,7 @@
 .alert{
     visibility: hidden;
 }
+
+.card:hover{
+    cursor: pointer;
+}

@@ -9,6 +9,7 @@
     const searchFoodBtn = document.getElementById("searchFood");
     const searchText = document.getElementById("searchText");
     const resultList = document.getElementById("result-list");
+    const recipeInfo = document.getElementsById('recipe-info')
     const spinner = document.querySelector(".spinner-border");
     const alert = document.querySelector(".alert");
     const loadMoreBtn = document.createElement("button");
@@ -21,6 +22,7 @@
       if (e.key === "Enter") {
         spinner.style.visibility = "visible";
         offset = 0;
+        clearTags();
         fetchList(searchText.value);
       }
     });
@@ -30,6 +32,7 @@
       spinner.style.visibility = "visible";
       console.log("search text:  ", searchText.value);
       offset = 0;
+      clearTags();
       fetchList(searchText.value);
     });
 
@@ -38,11 +41,23 @@
       fetchList(searchText.value);
     });
 
+    const cardEvent = (card, id) => {
+      card.addEventListener("click", () => {
+        resultList.style.visibility = 'hidden';
+        fetchRecipe(id).then((data) => console.log(data));
+        renderRecipe(data);
+      });
+    };
+
     //functions
     function clearTags() {
       while (resultList.firstChild) {
         resultList.removeChild(resultList.firstChild);
       }
+    }
+
+    function renderRecipe(data) {
+        
     }
 
     function renderList(data) {
@@ -56,21 +71,42 @@
         list.setAttribute("class", "row mb-3 text-center");
         let choppedData = data.results.slice(idx, idx + 3);
         choppedData.forEach((element) => {
-          list.innerHTML =
-            list.innerHTML +
-            `<div class="col-12 col-lg-4">
-            <div class="card">
-            <img src="${element.image}" class="rounded" />
-            <div class="card-body">
-            <h6 class="card-title">${element.title}</h6>
-            </div>
-            </div>
-            </div>`;
+          list.appendChild(cardDisplay(element));
+          /*const card = document.querySelector(`.card [data-id="${element.id}"]`);
+          card.addEventListener("click", () => {
+            clearTags();  
+            fetchRecipe(element.id).then((data) => console.log(data));
+          });*/
         });
-        idx = idx + 3;
+        idx = idx + 3; // offset the chopped range
         resultList.appendChild(list);
+
         loadMore(totalResults);
       }
+    }
+
+    function cardDisplay(element) {
+      const cardColumn = document.createElement("div");
+      const card = document.createElement("div");
+      const img = document.createElement("img");
+      const cardBody = document.createElement("div");
+      const cardTitle = document.createElement("h6");
+
+      cardColumn.setAttribute("class", "col-12 col-lg-4");
+      card.setAttribute("data-id", element.id);
+      card.setAttribute("class", "card");
+      img.setAttribute("src", element.image);
+      img.setAttribute("class", "rounded");
+      cardBody.setAttribute("class", "card-body");
+      cardTitle.setAttribute("class", "card-title");
+      cardTitle.innerText = element.title;
+
+      cardBody.appendChild(cardTitle);
+
+      card.append(img, cardBody);
+      cardColumn.appendChild(card);
+      cardEvent(card, element.id); // add event listener
+      return cardColumn;
     }
 
     function loadMore(totalResults) {
@@ -78,7 +114,7 @@
         loadMoreBtn.innerText = "Load more....";
         resultList.appendChild(loadMoreBtn);
       } else {
-          loadMoreBtn.remove();
+        loadMoreBtn.remove();
       }
     }
 
@@ -101,6 +137,12 @@
       return fetch(baseURL + `/food/jokes/random?apiKey=${apiKey}`).then(
         (resp) => resp.json()
       );
+    }
+
+    function fetchRecipe(id) {
+      return fetch(
+        baseURL + `/recipes/${id}/information?apiKey=${apiKey}`
+      ).then((resp) => resp.json());
     }
 
     function fetchList(query) {
