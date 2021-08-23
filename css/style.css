@@ -7,13 +7,26 @@
 }
 
 .spinner-border {
-    visibility: hidden;
+    visibility: collapse;
 }
 
 .alert{
-    visibility: hidden;
+    visibility: collapse;
+}
+
+.alert-float{
+    z-index: -10;
 }
 
 .card:hover{
     cursor: pointer;
 }
+#closeContent{
+    visibility: hidden;
+}
+.container {
+    width: auto;
+    max-width: 680px;
+    padding: 0 15px;
+  }
+  

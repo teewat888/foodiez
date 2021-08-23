@@ -11,6 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="./css/style.css" />
+    <title>FoodieZ: where we love food!</title>
   </head>
   <body>
     <div class="container-fluid">
@@ -30,8 +31,11 @@
           </button>
         </div>
       </form>
-      <div id="recipe-info" class="container-fluid"></div>
-      <div id="result-list" class="container-fluid text-center pt-3">
+      <button id='closeContent' class='btn-sm btn-light'>Close-[X]</button>
+      <div id="recipe-info" class="container-fluid">
+
+      </div>
+      <div id="info-box" class="text-center alert-float">
         <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
@@ -39,6 +43,21 @@
             An error occurs, please try again later!
           </div>
       </div>
+      <div id="result-list" class="container-fluid text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="alert alert-danger" role="alert">
+            An error occurs, please try again later!
+          </div>
+      </div>
+
+      <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+          <span class="text-muted">&copy 2021 teerawat p.</span>
+        </div>
+      </footer>
+
     </div>
     <script src="./js/apiKey.js"></script>
     <script src="./js/index.js"></script>
