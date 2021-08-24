@@ -1,4 +1,11 @@
 'USE STRICT';
+
+/* 
+To do :
+->add eventListener "error" to image in recipe page to handle missing of image property (renderRecipe)
+
+*/
+
 (() => {
   document.addEventListener("DOMContentLoaded", () => {
     //config
