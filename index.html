@@ -11,13 +11,36 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="./css/style.css" />
-    <title>FoodieZ: where we love food!</title>
+    <title>FoodieZ: advance food search...</title>
   </head>
   <body>
+    <div class="container">
+      <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a id="home" href="#" class="nav-link active">Home</a>
+          </li>
+          <li class="nav-item">
+            <a id="advance" href="#" class="nav-link">Advance</a>
+          </li>
+          <li class="nav-item">
+            <a id="tools" href="#" class="nav-link">Tools</a>
+          </li>
+        </ul>
+      </header>
+    </div>
     <div class="container-fluid">
-      <h1 class="display-1 text-center topSpace"><span style="color:#cc3b23">F</span><span style="color:#ed8d28">o</span><span style="color:#ecc243">o</span><span style="color:#748b37">d</span><span style="color:#3672c7">i</span><span style="color:#cc3b23">e</span><span style="color:#ed8d28">Z</span></h1>
+      <h1 class="display-1 text-center topSpace">
+        <span style="color: #cc3b23">F</span
+        ><span style="color: #ed8d28">o</span
+        ><span style="color: #ecc243">o</span
+        ><span style="color: #748b37">d</span
+        ><span style="color: #3672c7">i</span
+        ><span style="color: #cc3b23">e</span
+        ><span style="color: #ed8d28">Z</span>
+      </h1>
       <h6 class="font-monospace text-center d-none d-md-block"></h6>
-      <form>
+      <form id="search-form">
         <div class="row mb-3">
           <div class="col-2 col-sm-3"></div>
           <div class="col-8 col-sm-6">
@@ -31,34 +54,55 @@
           </button>
         </div>
       </form>
-      <button id='closeContent' class='btn-sm btn-light'>Close-[X]</button>
-      <div id="recipe-info" class="container-fluid">
-
+      <div id="tool-box" class="container-fluid">
+        <form id="tool-form">
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Email address</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="ingredient"
+              />
+            <div id="ingredient-text" class="form-text">
+              Please 
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Ingredient Analysis</button>
+        </form>
       </div>
+      <div id="top-info-box" class="container-fluid text-center">
+        <div id="notified-text"></div><!-- notifed text eg. search text validation-->
+        <div id="spinner-top" class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div id="alert-top" class="alert alert-danger" role="alert">
+          An error occurs, please try again later!
+        </div>
+      </div>
+      <div class="container-fluid text-center">
+        <button id="closeContent" class="btn-lg btn-light">Close-[X]</button>
+      </div>
+      <!-- recipe -->
+      <div id="recipe-info" class="container-fluid"></div>
+      <!-- recipes list-->
+      <div id="result-list" class="container-fluid text-center"></div>
       <div id="info-box" class="text-center alert-float">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="alert alert-danger" role="alert">
-            An error occurs, please try again later!
-          </div>
+        <div id="spinner" class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div id="alert" class="alert alert-danger" role="alert">
+          An error occurs, please try again later!
+        </div>
       </div>
-      <div id="result-list" class="container-fluid text-center">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="alert alert-danger" role="alert">
-            An error occurs, please try again later!
-          </div>
-      </div>
-
       <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
           <span class="text-muted">&copy 2021 teerawat p.</span>
         </div>
       </footer>
-
     </div>
+    <script src="./js/ingredients.js"></script>
     <script src="./js/apiKey.js"></script>
     <script src="./js/index.js"></script>
   </body>
