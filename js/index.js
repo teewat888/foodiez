@@ -2,7 +2,7 @@
 
 /* 
 To do :
-
+renderNutrition
 */
 
 (() => {
@@ -149,8 +149,9 @@ To do :
       alert.style.visibility = "collapse";
       closeContent.style.visibility = "visible";
       const imageDiv = document.createElement("div");
-      if(data.image === undefined) {
-        data.image = 'https://spoonacular.com/recipeImages/606953-556x370.jpg';}
+      if (data.image === undefined) {
+        data.image = "https://spoonacular.com/recipeImages/606953-556x370.jpg";
+      }
       imageDiv.setAttribute("class", "text-center pt-10");
       imageDiv.innerHTML = `
         <img alt="${data.title}" src="${
@@ -163,24 +164,34 @@ To do :
         <h6><b>Methods</b></h6>
         ${renderMethods(data)}
         <h6><b>Nutrition Information</b></h6>
-
+        ${renderNutrition(data)}
         <div>
         `;
 
       recipeInfo.appendChild(imageDiv);
+      
     }
 
     //render Nutrition
     function renderNutrition(data) {
       let nutritionText = "";
-      data.nutrition[0].forEach((el, index, array) => {
+      const nutritionDiv = document.createElement("div");
+      nutritionDiv.setAttribute("class", "row row-col-3");
+      nutritionText = '<div class="row row-col-3">';
+      data.nutrition.nutrients.forEach((el, index, array) => {
         if (index < 8) {
           //first 8 not good for health items
           if (index !== 4) {
             //exclude net carb
+            nutritionText += `
+            <div class="col-4">${el.title}</div>
+            <div class="col-2">${el.amount} ${el.unit}</div>
+            <div class="col-6"></div>`;
           }
         }
       });
+      nutritionText += '</div>';
+      return nutritionText;
     }
 
     //render Ingredients
@@ -215,7 +226,7 @@ To do :
 
       const list = document.createElement("div");
       list.setAttribute("class", "row mb-3 text-center row-col-6");
-    
+
       data.results.forEach((element) => {
         list.appendChild(cardDisplay(element));
       });
@@ -277,7 +288,7 @@ To do :
 
     //fetch
     function fetchJoke() {
-      return fetch(baseURL + `/food/jokes/random?apiKey=${apiKey}`).then(
+      return fetch(baseURL + `food/jokes/random?apiKey=${apiKey}`).then(
         (resp) => resp.json()
       );
     }
@@ -285,21 +296,21 @@ To do :
     function fetchRecipe(id) {
       return fetch(
         baseURL +
-          `/recipes/${id}/information?apiKey=${apiKey}&instructionsRequired=true&includeNutrition=true`
+          `recipes/${id}/information?apiKey=${apiKey}&instructionsRequired=true&includeNutrition=true`
       ).then((resp) => resp.json());
     }
 
     function fetchList(query) {
       return fetch(
         baseURL +
-          `/recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
+          `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
       )
         .then((resp) => resp.json())
         .then((data) => {
           if (data.totalResults === 0) {
             notifiedText.style.visibility = "visible";
             notifiedText.innerHTML =
-              "<span style='color:red'>We can not find any food you like please try again eg. pasta :)</span>";
+              "<span style='color:red'>We can not find any food you like, please try something like pasta :)</span>";
           }
 
           spinner.style.visibility = "collapse";
