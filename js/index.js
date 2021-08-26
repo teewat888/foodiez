@@ -2,9 +2,6 @@
 
 /* 
 To do :
-->add eventListener "error" to image in recipe page to handle missing of image property (renderRecipe)
--->add loading spinner for individual recipe  (add more infoBox on top with default height 0)
---> add there is no result text to inform user. 
 
 */
 
@@ -152,10 +149,13 @@ To do :
       alert.style.visibility = "collapse";
       closeContent.style.visibility = "visible";
       const imageDiv = document.createElement("div");
-
+      if(data.image === undefined) {
+        data.image = 'https://spoonacular.com/recipeImages/606953-556x370.jpg';}
       imageDiv.setAttribute("class", "text-center pt-10");
       imageDiv.innerHTML = `
-        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>
+        <img alt="${data.title}" src="${
+        data.image
+      }" class="rounded" /><br><h3>${data.title}</h3>
         <div style="text-align:left" class="pt-20p">
 
         <h6><b>Ingredients</b></h6>
@@ -172,23 +172,24 @@ To do :
 
     //render Nutrition
     function renderNutrition(data) {
-        let nutritionText = '';
-        data.nutrition[0].forEach((el, index, array) => {
-            if(index < 8) { //first 8 not good for health items
-                if(index !== 4) { //exclude net carb 
-
-                }
-            }
-        })
+      let nutritionText = "";
+      data.nutrition[0].forEach((el, index, array) => {
+        if (index < 8) {
+          //first 8 not good for health items
+          if (index !== 4) {
+            //exclude net carb
+          }
+        }
+      });
     }
 
     //render Ingredients
     function renderIngredients(data) {
-        let ingredientsText = '';
-        data.extendedIngredients.forEach((el) => {
-            ingredientsText += `<p>${el.originalString}</p>`;
-        })
-        return ingredientsText;
+      let ingredientsText = "";
+      data.extendedIngredients.forEach((el) => {
+        ingredientsText += `<p>${el.originalString}</p>`;
+      });
+      return ingredientsText;
     }
     //render Methods
     function renderMethods(data) {
@@ -209,23 +210,19 @@ To do :
       alertTop.style.visibility = "collapse";
       spinnerTop.style.visibility = "collapse";
       topInfoBox.style.height = "0";
-      //display no search result
-      const totalResults = data.totalResults;
-      //idx to track slice element to get 6 slices each row (idx+6)
-      //let idx = 0;
-      // i to limit the max rows to display each time
-      //for (let i = 0; i < 3; i++) {
-        const list = document.createElement("div");
-        list.setAttribute("class", "row mb-3 text-center row-col-6");
-        //let choppedData = data.results.slice(idx, idx + 6); //chopped data = number of columns
-        data.results.forEach((element) => {
-          list.appendChild(cardDisplay(element));
-        });
-        //idx = idx + 6; // offset the chopped range
-        resultList.appendChild(list);
 
-        loadMore(totalResults);
-     // }
+      const totalResults = data.totalResults;
+
+      const list = document.createElement("div");
+      list.setAttribute("class", "row mb-3 text-center row-col-6");
+    
+      data.results.forEach((element) => {
+        list.appendChild(cardDisplay(element));
+      });
+
+      resultList.appendChild(list);
+
+      loadMore(totalResults);
     }
     //image card render for render list
     function cardDisplay(element) {
@@ -236,7 +233,7 @@ To do :
       const cardBody = document.createElement("div");
       const cardTitle = document.createElement("h6");
 
-      cardColumn.setAttribute("class", "col-12 col-sm-6 col-md-2");
+      cardColumn.setAttribute("class", "col-12 col-sm-6 col-md-2 mb-3");
       card.setAttribute("data-id", element.id);
       card.setAttribute("class", "card");
       img.setAttribute("src", element.image);
