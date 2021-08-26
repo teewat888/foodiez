@@ -42,6 +42,7 @@ To do :
     home.addEventListener("click", () => {
       navActive("home");
       searchForm.style.display = "block";
+      recipeInfo.style.display = "block";
       toolBox.style.display = "none";
     });
 
@@ -52,6 +53,7 @@ To do :
     tools.addEventListener("click", () => {
       navActive("tools");
       searchForm.style.display = "none";
+      recipeInfo.style.display = "none";
       toolBox.style.display = "block";
     });
 
@@ -149,15 +151,58 @@ To do :
     function renderRecipe(data) {
       alert.style.visibility = "collapse";
       closeContent.style.visibility = "visible";
-      const topContent = document.createElement("div");
-      topContent.setAttribute("class", "row");
-      topContent.innerHTML = `<div class="col-md-6">
-        <img alt="${data.title}" src="${data.image}" class="rounded"/>
-        </div>
-        <div class="col-md-6">
-        </div>`;
-      recipeInfo.appendChild(topContent);
+      const imageDiv = document.createElement("div");
+
+      imageDiv.setAttribute("class", "text-center pt-10");
+      imageDiv.innerHTML = `
+        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>
+        <div style="text-align:left" class="pt-20p">
+
+        <h6><b>Ingredients</b></h6>
+        ${renderIngredients(data)}
+        <h6><b>Methods</b></h6>
+        ${renderMethods(data)}
+        <h6><b>Nutrition Information</b></h6>
+
+        <div>
+        `;
+
+      recipeInfo.appendChild(imageDiv);
     }
+
+    //render Nutrition
+    function renderNutrition(data) {
+        let nutritionText = '';
+        data.nutrition[0].forEach((el, index, array) => {
+            if(index < 8) { //first 8 not good for health items
+                if(index !== 4) { //exclude net carb 
+
+                }
+            }
+        })
+    }
+
+    //render Ingredients
+    function renderIngredients(data) {
+        let ingredientsText = '';
+        data.extendedIngredients.forEach((el) => {
+            ingredientsText += `<p>${el.originalString}</p>`;
+        })
+        return ingredientsText;
+    }
+    //render Methods
+    function renderMethods(data) {
+      let methodsText = "";
+      data.analyzedInstructions[0].steps.forEach((step) => {
+        methodsText += `<p>${step.number}. ${step.step}</p>`;
+      });
+      return methodsText;
+    }
+
+    //render cuisine styles
+    function renderCuisine(data) {}
+    //render special diet
+
     //render recipes
     function renderList(data) {
       alert.style.visibility = "collapse";
@@ -167,20 +212,20 @@ To do :
       //display no search result
       const totalResults = data.totalResults;
       //idx to track slice element to get 6 slices each row (idx+6)
-      let idx = 0;
+      //let idx = 0;
       // i to limit the max rows to display each time
-      for (let i = 0; i < 3; i++) {
+      //for (let i = 0; i < 3; i++) {
         const list = document.createElement("div");
-        list.setAttribute("class", "row mb-3 text-center");
-        let choppedData = data.results.slice(idx, idx + 6); //chopped data = number of columns
-        choppedData.forEach((element) => {
+        list.setAttribute("class", "row mb-3 text-center row-col-6");
+        //let choppedData = data.results.slice(idx, idx + 6); //chopped data = number of columns
+        data.results.forEach((element) => {
           list.appendChild(cardDisplay(element));
         });
-        idx = idx + 6; // offset the chopped range
+        //idx = idx + 6; // offset the chopped range
         resultList.appendChild(list);
 
         loadMore(totalResults);
-      }
+     // }
     }
     //image card render for render list
     function cardDisplay(element) {
@@ -207,7 +252,7 @@ To do :
       cardEvent(card, element.id); // add event listener
       return cardColumn;
     }
-    //load more button 
+    //load more button
     function loadMore(totalResults) {
       if (totalResults - number - offset > 0) {
         loadMoreBtn.setAttribute("class", "btn-lg btn-light");
@@ -242,7 +287,8 @@ To do :
 
     function fetchRecipe(id) {
       return fetch(
-        baseURL + `/recipes/${id}/information?apiKey=${apiKey}`
+        baseURL +
+          `/recipes/${id}/information?apiKey=${apiKey}&instructionsRequired=true&includeNutrition=true`
       ).then((resp) => resp.json());
     }
 

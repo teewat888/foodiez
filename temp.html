@@ -12,10 +12,51 @@
     />
     <link rel="stylesheet" href="./css/style.css" />
     <title>FoodieZ: advance food search...</title>
+
+
   </head>
+
+  function renderRecipe(data) {
+    alert.style.visibility = "collapse";
+    closeContent.style.visibility = "visible";
+    const topContent = document.createElement("div");
+    topContent.setAttribute("class", "row");
+    topContent.innerHTML = `<div class="col-md-6 pt-5 ">
+      <img alt="${data.title}" src="${data.image}" class="rounded ml-8"/>
+      </div>
+      <div class="col-md-6">
+      </div>`;
+    recipeInfo.appendChild(topContent);
+  }
   <body>
     
     <script src="./js/ingredients.js"></script>
     
   </body>
 </html>
+
+
+//render recipes
+    function renderList(data) {
+      alert.style.visibility = "collapse";
+      alertTop.style.visibility = "collapse";
+      spinnerTop.style.visibility = "collapse";
+      topInfoBox.style.height = "0";
+      //display no search result
+      const totalResults = data.totalResults;
+      //idx to track slice element to get 6 slices each row (idx+6)
+      let idx = 0;
+      // i to limit the max rows to display each time
+      for (let i = 0; i < 3; i++) {
+        const list = document.createElement("div");
+        list.setAttribute("class", "row mb-3 text-center");
+        let choppedData = data.results.slice(idx, idx + 6); //chopped data = number of columns
+        choppedData.forEach((element) => {
+          list.appendChild(cardDisplay(element));
+        });
+        idx = idx + 6; // offset the chopped range
+        resultList.appendChild(list);
+
+        loadMore(totalResults);
+      }
+    }

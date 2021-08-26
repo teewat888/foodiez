@@ -5,6 +5,17 @@
 .pt-3 {
     padding-top: 30px;
 }
+.pt-10 {
+    padding-top: 10px;
+}
+.pt-10p {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+.pt-20p {
+    padding-left: 20%;
+    padding-right: 20%;
+}
 
 .spinner-border {
     visibility: collapse;
