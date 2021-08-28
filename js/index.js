@@ -36,7 +36,7 @@ renderNutrition
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
     let unit = "us"; // default unit of ingredients
-
+    let ingredients = {}; // object to store ingredients
     //events listener
     home.addEventListener("click", () => {
       navActive("home");
@@ -109,33 +109,18 @@ renderNutrition
     };
 
     //unit buttons
-    const unitBtn = (btn, id) => {
+    const unitBtn = (btn, btn2, data, ingredientsText) => {
       btn.addEventListener("click", () => {
-        if (btn.id === 'metric') {
-            unit = 'metric';
+        if (btn.id === "metric") {
+          unit = "metric";
         } else {
-            unit = 'us';
+          unit = "us";
         }
-        btn.setAttribute('class','btn btn-sm btn-outline-secondary active');
-        fetchRecipe(id)
-        .then((data) => {
-            //console.log(data);
-            infoBox.style.visibility = "collapse";
-            spinner.style.visibility = "collapse";
-            alert.style.visibility = "collapse";
-            topInfoBox.style.height = "0";
-            spinnerTop.style.visibility = "collapse";
-            alertTop.style.visibility = "collapse";
-
-            renderRecipe(data);
-          })
-          .catch((e) => {
-            console.log(e);
-            alertTop.style.visibility = "visible";
-          });
+        btn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
+        btn2.setAttribute("class", "btn btn-sm btn-outline-secondary");
+        ingredientsText.innerHTML = renderIngredients(data);
       });
     };
-    
 
     //functions
     function searchAction() {
@@ -180,35 +165,46 @@ renderNutrition
       alert.style.visibility = "collapse";
       closeContent.style.visibility = "visible";
       const imageDiv = document.createElement("div");
+      const infoDiv = document.createElement("div");
+      const ingredientsDiv = document.createElement("div");
+      const methodDiv = document.createElement("div");
+      const nutritionDiv = document.createElement("div");
+
       if (data.image === undefined) {
         data.image = "https://spoonacular.com/recipeImages/606953-556x370.jpg";
       }
       imageDiv.setAttribute("class", "text-center pt-10");
       imageDiv.innerHTML = `
-        <img alt="${data.title}" src="${
-        data.image
-      }" class="rounded" /><br><h3>${data.title}</h3>
-        <div style="text-align:left" class="pt-20p">
+        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>`;
 
-        <h6><b>Ingredients</b></h6>
+      infoDiv.setAttribute("class", "pt-20p");
+      infoDiv.setAttribute("style", "text-align:left");
+
+      ingredientsDiv.innerHTML = `<h6><b>Ingredients</b></h6>
         <div class="btn-group">
         <button id="us" class="btn btn-sm btn-outline-secondary active" aria-current="page">US</button>
         <button id="metric" class="btn btn-sm btn-outline-secondary">METRIC</button>
         </div>
-        ${renderIngredients(data)}  
-        <h6><b>Methods</b></h6>
-        ${renderMethods(data)}
-        <h6><b>Nutrition Information</b></h6>
-        ${renderNutrition(data)}
-        <div>
-        `;
+        <div id="ingredientsText">
+        </div>`;
+      methodDiv.innerHTML = `<h6><b>Methods</b></h6>
+      <div id="methodsText"></div>`;
+      nutritionDiv.innerHTML = `<h6><b>Nutrition Information</b></h6>
+      <div id="nutritionText"></div>`;
 
+      infoDiv.appendChild(ingredientsDiv);
+      ingredientsDiv.append(methodDiv, nutritionDiv);
+      imageDiv.append(infoDiv);
       recipeInfo.appendChild(imageDiv);
+
+      const ingredientsText = document.getElementById("ingredientsText");
+      ingredientsText.innerHTML = renderIngredients(data);
+      const methodsText = document.getElementById("methodsText");
+      const nutritionText = document.getElementById("nutritionText");
       const usBtn = document.getElementById("us");
-      unitBtn(usBtn,data.id);
-     // console.log(usBtn.id);
       const metricBtn = document.getElementById("metric");
-      unitBtn(metricBtn,data.id);
+      unitBtn(usBtn, metricBtn, data, ingredientsText);
+      unitBtn(metricBtn, usBtn, data, ingredientsText);
     }
 
     //render Nutrition
@@ -250,15 +246,32 @@ renderNutrition
 
     //render Ingredients
     function renderIngredients(data) {
-      let ingredientsText = "";
+      let ingredientsText = '<ul class="list-unstyled">';
+      const usArr = [];
+      const metricArr = [];
       data.extendedIngredients.forEach((el) => {
-        ingredientsText += `<p>
-        ${el.measures[unit].amount}
-        ${el.measures[unit].unitShort}
-        ${el.originalName}
-        </p>`;
+        usArr.push([
+          el.measures["us"].amount,
+          el.measures["us"].unitShort + " " + el.originalName,
+        ]);
+        metricArr.push([
+          el.measures["metric"].amount.toFixed(2),
+          el.measures["metric"].unitShort + " " + el.originalName,
+        ]);
       });
-      return ingredientsText;
+      ingredients.us = usArr;
+      ingredients.metric = metricArr;
+      console.log(ingredients);
+      if (unit === "us") {
+        usArr.forEach((el) => {
+          ingredientsText += `<li>${el[0]}&nbsp;&nbsp;&nbsp;${el[1]}</li>`;
+        });
+      } else {
+        metricArr.forEach((el) => {
+          ingredientsText += `<li>${el[0]}&nbsp;&nbsp;&nbsp;${el[1]}</li>`;
+        });
+      }
+      return ingredientsText + "</ul>";
     }
     //render Methods
     function renderMethods(data) {
