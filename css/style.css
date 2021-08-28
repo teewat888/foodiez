@@ -40,4 +40,18 @@
     max-width: 680px;
     padding: 0 15px;
   }
+
+.red-n {
+    color: red;
+    font-size: 12px;
+
+}
+.green-n {
+    color: green;
+    font-size: 12px;
+
+}
+.m-progress-t {
+    margin-top: 7px;
+}
   

@@ -3,6 +3,7 @@
 /* 
 To do :
 renderNutrition
+<ul class="list-unstyled"> --> change ingredient structure to use ul/li --> might use object to store both us and metric at the same time!
 */
 
 (() => {
@@ -34,6 +35,7 @@ renderNutrition
 
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
+    let unit = "us"; // default unit of ingredients
 
     //events listener
     home.addEventListener("click", () => {
@@ -106,6 +108,35 @@ renderNutrition
       });
     };
 
+    //unit buttons
+    const unitBtn = (btn, id) => {
+      btn.addEventListener("click", () => {
+        if (btn.id === 'metric') {
+            unit = 'metric';
+        } else {
+            unit = 'us';
+        }
+        btn.setAttribute('class','btn btn-sm btn-outline-secondary active');
+        fetchRecipe(id)
+        .then((data) => {
+            //console.log(data);
+            infoBox.style.visibility = "collapse";
+            spinner.style.visibility = "collapse";
+            alert.style.visibility = "collapse";
+            topInfoBox.style.height = "0";
+            spinnerTop.style.visibility = "collapse";
+            alertTop.style.visibility = "collapse";
+
+            renderRecipe(data);
+          })
+          .catch((e) => {
+            console.log(e);
+            alertTop.style.visibility = "visible";
+          });
+      });
+    };
+    
+
     //functions
     function searchAction() {
       offset = 0;
@@ -160,7 +191,11 @@ renderNutrition
         <div style="text-align:left" class="pt-20p">
 
         <h6><b>Ingredients</b></h6>
-        ${renderIngredients(data)}
+        <div class="btn-group">
+        <button id="us" class="btn btn-sm btn-outline-secondary active" aria-current="page">US</button>
+        <button id="metric" class="btn btn-sm btn-outline-secondary">METRIC</button>
+        </div>
+        ${renderIngredients(data)}  
         <h6><b>Methods</b></h6>
         ${renderMethods(data)}
         <h6><b>Nutrition Information</b></h6>
@@ -169,28 +204,47 @@ renderNutrition
         `;
 
       recipeInfo.appendChild(imageDiv);
-      
+      const usBtn = document.getElementById("us");
+      unitBtn(usBtn,data.id);
+     // console.log(usBtn.id);
+      const metricBtn = document.getElementById("metric");
+      unitBtn(metricBtn,data.id);
     }
 
     //render Nutrition
     function renderNutrition(data) {
       let nutritionText = "";
-      const nutritionDiv = document.createElement("div");
-      nutritionDiv.setAttribute("class", "row row-col-3");
-      nutritionText = '<div class="row row-col-3">';
+      //const nutritionDiv = document.createElement("div");
+      //nutritionDiv.setAttribute("class", "row row-col-3");
+      nutritionText = '<div class="row row-col-4">';
       data.nutrition.nutrients.forEach((el, index, array) => {
         if (index < 8) {
           //first 8 not good for health items
           if (index !== 4) {
             //exclude net carb
             nutritionText += `
-            <div class="col-4">${el.title}</div>
-            <div class="col-2">${el.amount} ${el.unit}</div>
-            <div class="col-6"></div>`;
+            <div class="col-2 red-n">${el.title}</div>
+            <div class="col-2 red-n">${el.amount} ${el.unit}</div>
+            <div class="col-7">
+            <div class="progress m-progress-t" style="height: 5px;">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: ${el.percentOfDailyNeeds}%" aria-valuenow="${el.percentOfDailyNeeds}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            </div>
+            <div class="col-1 red-n">${el.percentOfDailyNeeds}%</div>`;
           }
+        } else {
+          nutritionText += `
+            <div class="col-2 green-n">${el.title}</div>
+            <div class="col-2 green-n">${el.amount} ${el.unit}</div>
+            <div class="col-7">
+            <div class="progress m-progress-t" style="height: 5px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: ${el.percentOfDailyNeeds}%" aria-valuenow="${el.percentOfDailyNeeds}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            </div>
+            <div class="col-1 green-n">${el.percentOfDailyNeeds}%</div>`;
         }
       });
-      nutritionText += '</div>';
+      nutritionText += "</div>";
       return nutritionText;
     }
 
@@ -198,7 +252,11 @@ renderNutrition
     function renderIngredients(data) {
       let ingredientsText = "";
       data.extendedIngredients.forEach((el) => {
-        ingredientsText += `<p>${el.originalString}</p>`;
+        ingredientsText += `<p>
+        ${el.measures[unit].amount}
+        ${el.measures[unit].unitShort}
+        ${el.originalName}
+        </p>`;
       });
       return ingredientsText;
     }
