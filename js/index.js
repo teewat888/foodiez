@@ -198,13 +198,23 @@ renderNutrition
       recipeInfo.appendChild(imageDiv);
 
       const ingredientsText = document.getElementById("ingredientsText");
-      ingredientsText.innerHTML = renderIngredients(data);
       const methodsText = document.getElementById("methodsText");
       const nutritionText = document.getElementById("nutritionText");
       const usBtn = document.getElementById("us");
       const metricBtn = document.getElementById("metric");
+      //check the current unit and maintain state to each recipe
+      if (unit === 'us') {
+          usBtn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
+          metricBtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
+      } else {
+        usBtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
+        metricBtn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
+      }
       unitBtn(usBtn, metricBtn, data, ingredientsText);
       unitBtn(metricBtn, usBtn, data, ingredientsText);
+      ingredientsText.innerHTML = renderIngredients(data);
+      methodsText.innerHTML = renderMethods(data);
+      nutritionText.innerHTML = renderNutrition(data);
     }
 
     //render Nutrition
@@ -275,11 +285,11 @@ renderNutrition
     }
     //render Methods
     function renderMethods(data) {
-      let methodsText = "";
+      let methodsText = "<ul class=\"list-unstyled\">";
       data.analyzedInstructions[0].steps.forEach((step) => {
-        methodsText += `<p>${step.number}. ${step.step}</p>`;
+        methodsText += `<li>${step.number}. ${step.step}</li>`;
       });
-      return methodsText;
+      return methodsText+'</ul>';
     }
 
     //render cuisine styles
