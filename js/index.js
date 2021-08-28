@@ -259,13 +259,17 @@ renderNutrition
       let ingredientsText = '<ul class="list-unstyled">';
       const usArr = [];
       const metricArr = [];
+      let tempEl;
       data.extendedIngredients.forEach((el) => {
         usArr.push([
           el.measures["us"].amount,
           el.measures["us"].unitShort + " " + el.originalName,
         ]);
+
+        tempEl = Number.isInteger(el.measures["metric"].amount) ? el.measures["metric"].amount : (el.measures["metric"].amount).toFixed(2); 
+
         metricArr.push([
-          el.measures["metric"].amount.toFixed(2),
+          tempEl,
           el.measures["metric"].unitShort + " " + el.originalName,
         ]);
       });
