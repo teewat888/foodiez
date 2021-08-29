@@ -60,3 +60,28 @@
         loadMore(totalResults);
       }
     }
+
+    allBg.addEventListener("click", () => {
+      filterSwitch.pressAll();
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });
+    vegetarianBg.addEventListener("click", () => {
+      filterSwitch.pressMe("vegetarian");
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });
+    veganBg.addEventListener("click", () => {
+      filterSwitch.pressMe("vegan");
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });
+    glutenBg.addEventListener("click", () => {
+      filterSwitch.pressMe("glutenFree");
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });
+    dairyBg.addEventListener("click", () => {
+      filterSwitch.pressMe("dairyFree");
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });
+    fodmapBg.addEventListener("click", () => {
+      filterSwitch.pressMe("lowFodMap");
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+    });

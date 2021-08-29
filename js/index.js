@@ -2,8 +2,9 @@
 
 /* 
 To do :
-renderNutrition
-<ul class="list-unstyled"> --> change ingredient structure to use ul/li --> might use object to store both us and metric at the same time!
+advance search 
+tools
+
 */
 
 (() => {
@@ -32,22 +33,114 @@ renderNutrition
     const notifiedText = document.getElementById("notified-text");
     const searchForm = document.getElementById("search-form");
     const toolBox = document.getElementById("tool-box");
+    const advanceSearch = document.getElementById("advance-search");
 
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
     let unit = "us"; // default unit of ingredients
     let ingredients = {}; // object to store ingredients
+    let avdSearch = false;
+
+    //filter switch to store search filter
+    const filterSwitch = {
+      switch: {
+        all: [true, "danger", "allBg", "All",'All'],
+        vegetarian: [false, "primary", "vegetarianBg", "vegetarian","vegetarian"],
+        vegan: [false, "success", "veganBg", "vegan","vegan"],
+        glutenFree: [false, "info", "glutenBg", "gluten free","gluten"],
+        dairyFree: [false, "warning", "dairyBg", "dairy free","dairy"]
+      },
+      pressAll() {
+        this.switch.all[0] = true;
+        this.switch.vegetarian[0] = false;
+        this.switch.vegan[0] = false;
+        this.switch.glutenFree[0] = false;
+        this.switch.dairyFree[0] = false;
+        //this.switch.lowFodMap[0] = false;
+      },
+      pressMe(theFilter) {
+        this.switch.all[0] = false;
+        this.switch[theFilter][0] = !this.switch[theFilter][0];
+        if(theFilter === 'vegetarian'){
+            this.switch['vegan'][0] = !this.switch[theFilter][0];
+        } else if (theFilter === 'vegan') {
+            this.switch['vegetarian'][0] = !this.switch[theFilter][0];
+        }
+      },
+      renderBadge() {
+        let result = "";
+
+        const properties = Object.keys(filterSwitch.switch);
+        for (const property of properties) {
+          if (filterSwitch.switch[property][0] === true) {
+            result += `<span id="${filterSwitch.switch[property][2]}" class="badge bg-${filterSwitch.switch[property][1]}">${filterSwitch.switch[property][3]}</span>`;
+          } else {
+            result += `<span id="${filterSwitch.switch[property][2]}" class="badge bg-light text-grey">${filterSwitch.switch[property][3]}</span>`;
+          }
+        }
+        return result;
+      },
+    };
+
     //events listener
     home.addEventListener("click", () => {
+      avdSearch = false;
       navActive("home");
       searchForm.style.display = "block";
       recipeInfo.style.display = "block";
       toolBox.style.display = "none";
+      advanceSearch.style.display = "none";
     });
 
     advance.addEventListener("click", () => {
+      avdSearch = true;
       navActive("advance");
+      toolBox.style.display = "none";
+      searchForm.style.display = "block";
+      advanceSearch.style.display = "block";
+      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+      attachEventBg();
     });
+
+    const attachEventBg = () => {
+      const allBg = document.getElementById("allBg");
+      const vegetarianBg = document.getElementById("vegetarianBg");
+      const veganBg = document.getElementById("veganBg");
+      const glutenBg = document.getElementById("glutenBg");
+      const dairyBg = document.getElementById("dairyBg");
+      const fodmapBg = document.getElementById("fodmapBg");
+
+      allBg.addEventListener("click", () => {
+        filterSwitch.pressAll();
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });
+      vegetarianBg.addEventListener("click", () => {
+        filterSwitch.pressMe("vegetarian");
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });
+      veganBg.addEventListener("click", () => {
+        filterSwitch.pressMe("vegan");
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });
+      glutenBg.addEventListener("click", () => {
+        filterSwitch.pressMe("glutenFree");
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });
+      dairyBg.addEventListener("click", () => {
+        filterSwitch.pressMe("dairyFree");
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });
+      /*fodmapBg.addEventListener("click", () => {
+        filterSwitch.pressMe("lowFodMap");
+        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        attachEventBg();
+      });*/
+    };
 
     tools.addEventListener("click", () => {
       navActive("tools");
@@ -123,6 +216,26 @@ renderNutrition
     };
 
     //functions
+    //function to render search with query parameters
+    function renderSearchQuery(){
+        let queryString = '';
+        // diet - single of either vegan or vegetarian , intorolance comma sep of diary, gluten
+        if (filterSwitch.switch.vegetarian[0]) {
+            queryString += `&diet=${filterSwitch.switch.vegetarian[4]}`;
+        } else if (filterSwitch.switch.vegan[0]) {
+            queryString += `&diet=${filterSwitch.switch.vegan[4]}`;
+        } 
+       if (filterSwitch.switch.glutenFree[0] && filterSwitch.switch.dairyFree[0]) {
+            queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]},${filterSwitch.switch.dairyFree[4]}`;
+        } else if (filterSwitch.switch.glutenFree[0]) {
+            queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]}`;
+        } else if (filterSwitch.switch.dairyFree[0]) {
+            queryString += `&intolerances=${filterSwitch.switch.dairyFree[4]}`;
+        }
+        return queryString;
+    }
+
+    //handle search action
     function searchAction() {
       offset = 0;
       clearTags();
@@ -164,8 +277,9 @@ renderNutrition
     function renderRecipe(data) {
       alert.style.visibility = "collapse";
       closeContent.style.visibility = "visible";
-      const imageDiv = document.createElement("div");
-      const infoDiv = document.createElement("div");
+      const imageDiv = document.createElement("div"); //image wrapper
+      const infoDiv = document.createElement("div"); // info wrapper  (info - diet,ingredients,methods,nutrition)
+      const dietDiv = document.createElement("div");
       const ingredientsDiv = document.createElement("div");
       const methodDiv = document.createElement("div");
       const nutritionDiv = document.createElement("div");
@@ -180,6 +294,8 @@ renderNutrition
       infoDiv.setAttribute("class", "pt-20p");
       infoDiv.setAttribute("style", "text-align:left");
 
+      dietDiv.innerHTML = `<div id="diet-text"></div>`;
+      ingredientsDiv.setAttribute("class", "pt-05");
       ingredientsDiv.innerHTML = `<h6><b>Ingredients</b></h6>
         <div class="btn-group">
         <button id="us" class="btn btn-sm btn-outline-secondary active" aria-current="page">US</button>
@@ -192,29 +308,72 @@ renderNutrition
       nutritionDiv.innerHTML = `<h6><b>Nutrition Information</b></h6>
       <div id="nutritionText"></div>`;
 
-      infoDiv.appendChild(ingredientsDiv);
-      ingredientsDiv.append(methodDiv, nutritionDiv);
+      dietDiv.append(ingredientsDiv, methodDiv, nutritionDiv);
+      infoDiv.appendChild(dietDiv);
+
       imageDiv.append(infoDiv);
       recipeInfo.appendChild(imageDiv);
 
+      const dietText = document.getElementById("diet-text");
       const ingredientsText = document.getElementById("ingredientsText");
       const methodsText = document.getElementById("methodsText");
       const nutritionText = document.getElementById("nutritionText");
       const usBtn = document.getElementById("us");
       const metricBtn = document.getElementById("metric");
       //check the current unit and maintain state to each recipe
-      if (unit === 'us') {
-          usBtn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
-          metricBtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
+      if (unit === "us") {
+        usBtn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
+        metricBtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
       } else {
         usBtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
-        metricBtn.setAttribute("class", "btn btn-sm btn-outline-secondary active");
+        metricBtn.setAttribute(
+          "class",
+          "btn btn-sm btn-outline-secondary active"
+        );
       }
-      unitBtn(usBtn, metricBtn, data, ingredientsText);
-      unitBtn(metricBtn, usBtn, data, ingredientsText);
+      unitBtn(usBtn, metricBtn, data, ingredientsText); //register us button
+      unitBtn(metricBtn, usBtn, data, ingredientsText); // register metric button
+      dietText.innerHTML = renderDiet(data);
       ingredientsText.innerHTML = renderIngredients(data);
       methodsText.innerHTML = renderMethods(data);
       nutritionText.innerHTML = renderNutrition(data);
+    }
+
+    //render badge
+    function renderBadge(diet, color, active) {
+      let badge = "";
+      if (active === true) {
+        badge = `<span class="badge bg-${color}">${diet}</span>`;
+      } else {
+        badge = `<span class="badge bg-light text-grey">${diet}</span>`;
+      }
+      return badge;
+    }
+    //render diet
+    function renderDiet(data) {
+      let dietText = "";
+      vegetarianBadge = data.vegetarian
+        ? renderBadge("vegetarian", "primary", true)
+        : renderBadge("vegetarian", "primary", false);
+      veganBadge = data.vegan
+        ? renderBadge("vegan", "success", true)
+        : renderBadge("vegan", "primary", false);
+      glutenFreeBadge = data.glutenFree
+        ? renderBadge("gluten free", "info", true)
+        : renderBadge("gluten free", "primary", false);
+      dairyFreeBadge = data.dairyFree
+        ? renderBadge("dairy free", "warning", true)
+        : renderBadge("dairy free", "primary", false);
+      lowFodMapBadge = data.lowFodmap
+        ? renderBadge("low fodmap", "dark", true)
+        : renderBadge("low fodmap", "primary", false);
+      dietText =
+        vegetarianBadge +
+        veganBadge +
+        glutenFreeBadge +
+        dairyFreeBadge +
+        lowFodMapBadge;
+      return dietText;
     }
 
     //render Nutrition
@@ -266,7 +425,9 @@ renderNutrition
           el.measures["us"].unitShort + " " + el.originalName,
         ]);
 
-        tempEl = Number.isInteger(el.measures["metric"].amount) ? el.measures["metric"].amount : (el.measures["metric"].amount).toFixed(2); 
+        tempEl = Number.isInteger(el.measures["metric"].amount)
+          ? el.measures["metric"].amount
+          : el.measures["metric"].amount.toFixed(2);
 
         metricArr.push([
           tempEl,
@@ -289,16 +450,12 @@ renderNutrition
     }
     //render Methods
     function renderMethods(data) {
-      let methodsText = "<ul class=\"list-unstyled\">";
+      let methodsText = '<ul class="list-unstyled">';
       data.analyzedInstructions[0].steps.forEach((step) => {
         methodsText += `<li>${step.number}. ${step.step}</li>`;
       });
-      return methodsText+'</ul>';
+      return methodsText + "</ul>";
     }
-
-    //render cuisine styles
-    function renderCuisine(data) {}
-    //render special diet
 
     //render recipes
     function renderList(data) {
@@ -386,6 +543,14 @@ renderNutrition
     }
 
     function fetchList(query) {
+      if ((avdSearch === true) && (filterSwitch.switch.all[0] !== true )) {
+        query += renderSearchQuery();
+      } else {
+          //remain same query word
+      }
+
+      console.log(query);
+    
       return fetch(
         baseURL +
           `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
