@@ -44,11 +44,17 @@ tools
     //filter switch to store search filter
     const filterSwitch = {
       switch: {
-        all: [true, "danger", "allBg", "All",'All'],
-        vegetarian: [false, "primary", "vegetarianBg", "vegetarian","vegetarian"],
-        vegan: [false, "success", "veganBg", "vegan","vegan"],
-        glutenFree: [false, "info", "glutenBg", "gluten free","gluten"],
-        dairyFree: [false, "warning", "dairyBg", "dairy free","dairy"]
+        all: [true, "danger", "allBg", "All", "All"],
+        vegetarian: [
+          false,
+          "primary",
+          "vegetarianBg",
+          "vegetarian",
+          "vegetarian",
+        ],
+        vegan: [false, "success", "veganBg", "vegan", "vegan"],
+        glutenFree: [false, "info", "glutenBg", "gluten free", "gluten"],
+        dairyFree: [false, "warning", "dairyBg", "dairy free", "dairy"],
       },
       pressAll() {
         this.switch.all[0] = true;
@@ -61,10 +67,10 @@ tools
       pressMe(theFilter) {
         this.switch.all[0] = false;
         this.switch[theFilter][0] = !this.switch[theFilter][0];
-        if(theFilter === 'vegetarian'){
-            this.switch['vegan'][0] = !this.switch[theFilter][0];
-        } else if (theFilter === 'vegan') {
-            this.switch['vegetarian'][0] = !this.switch[theFilter][0];
+        if (theFilter === "vegetarian") {
+          this.switch["vegan"][0] = !this.switch[theFilter][0];
+        } else if (theFilter === "vegan") {
+          this.switch["vegetarian"][0] = !this.switch[theFilter][0];
         }
       },
       renderBadge() {
@@ -90,6 +96,7 @@ tools
       recipeInfo.style.display = "block";
       toolBox.style.display = "none";
       advanceSearch.style.display = "none";
+      resultList.style.display = "block";
     });
 
     advance.addEventListener("click", () => {
@@ -100,6 +107,13 @@ tools
       advanceSearch.style.display = "block";
       advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
       attachEventBg();
+    });
+    tools.addEventListener("click", () => {
+      navActive("tools");
+      searchForm.style.display = "none";
+      recipeInfo.style.display = "none";
+      resultList.style.display = "none";
+      toolBox.style.display = "block";
     });
 
     const attachEventBg = () => {
@@ -142,13 +156,6 @@ tools
       });*/
     };
 
-    tools.addEventListener("click", () => {
-      navActive("tools");
-      searchForm.style.display = "none";
-      recipeInfo.style.display = "none";
-      toolBox.style.display = "block";
-    });
-
     searchText.addEventListener("keyup", (e) => {
       e.preventDefault();
       if (e.key === "Enter") {
@@ -167,14 +174,7 @@ tools
       fetchList(searchText.value);
     });
 
-    closeContent.addEventListener("click", () => {
-      while (recipeInfo.firstChild) {
-        recipeInfo.removeChild(recipeInfo.firstChild);
-      }
-      closeContent.style.visibility = "hidden";
-      topInfoBox.style.height = "0";
-      resultList.style.visibility = "visible";
-    });
+    closeContent.addEventListener("click", closeRecipe);
 
     const cardEvent = (card, id) => {
       card.addEventListener("click", () => {
@@ -216,29 +216,43 @@ tools
     };
 
     //functions
+    function closeRecipe() {
+      while (recipeInfo.firstChild) {
+        recipeInfo.removeChild(recipeInfo.firstChild);
+      }
+      closeContent.style.visibility = "hidden";
+      topInfoBox.style.height = "0";
+      resultList.style.visibility = "visible";
+    }
+
     //function to render search with query parameters
-    function renderSearchQuery(){
-        let queryString = '';
-        // diet - single of either vegan or vegetarian , intorolance comma sep of diary, gluten
-        if (filterSwitch.switch.vegetarian[0]) {
-            queryString += `&diet=${filterSwitch.switch.vegetarian[4]}`;
-        } else if (filterSwitch.switch.vegan[0]) {
-            queryString += `&diet=${filterSwitch.switch.vegan[4]}`;
-        } 
-       if (filterSwitch.switch.glutenFree[0] && filterSwitch.switch.dairyFree[0]) {
-            queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]},${filterSwitch.switch.dairyFree[4]}`;
-        } else if (filterSwitch.switch.glutenFree[0]) {
-            queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]}`;
-        } else if (filterSwitch.switch.dairyFree[0]) {
-            queryString += `&intolerances=${filterSwitch.switch.dairyFree[4]}`;
-        }
-        return queryString;
+    function renderSearchQuery() {
+      let queryString = "";
+      // diet - single of either vegan or vegetarian , intorolance comma sep of diary, gluten
+      if (filterSwitch.switch.vegetarian[0]) {
+        queryString += `&diet=${filterSwitch.switch.vegetarian[4]}`;
+      } else if (filterSwitch.switch.vegan[0]) {
+        queryString += `&diet=${filterSwitch.switch.vegan[4]}`;
+      }
+      if (
+        filterSwitch.switch.glutenFree[0] &&
+        filterSwitch.switch.dairyFree[0]
+      ) {
+        queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]},${filterSwitch.switch.dairyFree[4]}`;
+      } else if (filterSwitch.switch.glutenFree[0]) {
+        queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]}`;
+      } else if (filterSwitch.switch.dairyFree[0]) {
+        queryString += `&intolerances=${filterSwitch.switch.dairyFree[4]}`;
+      }
+      return queryString;
     }
 
     //handle search action
     function searchAction() {
       offset = 0;
       clearTags();
+      closeRecipe();
+      recipeInfo.style.visibility = "none";
       resultList.style.visibility = "visible";
       if (searchText.value.trim().length > 0) {
         spinner.style.visibility = "visible";
@@ -543,14 +557,14 @@ tools
     }
 
     function fetchList(query) {
-      if ((avdSearch === true) && (filterSwitch.switch.all[0] !== true )) {
+      if (avdSearch === true && filterSwitch.switch.all[0] !== true) {
         query += renderSearchQuery();
       } else {
-          //remain same query word
+        //remain same query word
       }
 
       console.log(query);
-    
+
       return fetch(
         baseURL +
           `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
