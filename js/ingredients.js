@@ -30,4 +30,4 @@ return {
 
 })();
 
-console.log(myIngredient.getSuggestions('set cream'));
+//console.log(myIngredient.getIngId('orange'));
