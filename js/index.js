@@ -8,10 +8,9 @@ tools
 */
 
 (() => {
-  document.addEventListener("DOMContentLoaded", () => {
+  
     //config
-    const baseURL = "https://api.spoonacular.com/";
-    const localURL = "http://localhost:3000/";
+    
     const config = {
       jokeEnable: false,
     };
@@ -34,63 +33,14 @@ tools
     const searchForm = document.getElementById("search-form");
     const toolBox = document.getElementById("tool-box");
     const advanceSearch = document.getElementById("advance-search");
-    const inputSubstitute = document.getElementById("input-substitute");
-    const btnSubstitute = document.getElementById("btnSubstitute");
-    const substituteText = document.getElementById("substituteText");
-    const maxInputGI = 10; //maximum number of input that gi tool can add
+    
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
     let unit = "us"; // default unit of ingredients
     let ingredients = {}; // object to store ingredients
     let avdSearch = false;
-    
 
-    //filter switch to store search filter
-    const filterSwitch = {
-      switch: {
-        all: [true, "danger", "allBg", "All", "All"],
-        vegetarian: [
-          false,
-          "primary",
-          "vegetarianBg",
-          "vegetarian",
-          "vegetarian",
-        ],
-        vegan: [false, "success", "veganBg", "vegan", "vegan"],
-        glutenFree: [false, "info", "glutenBg", "gluten free", "gluten"],
-        dairyFree: [false, "warning", "dairyBg", "dairy free", "dairy"],
-      },
-      pressAll() {
-        this.switch.all[0] = true;
-        this.switch.vegetarian[0] = false;
-        this.switch.vegan[0] = false;
-        this.switch.glutenFree[0] = false;
-        this.switch.dairyFree[0] = false;
-        //this.switch.lowFodMap[0] = false;
-      },
-      pressMe(theFilter) {
-        this.switch.all[0] = false;
-        this.switch[theFilter][0] = !this.switch[theFilter][0];
-        if (theFilter === "vegetarian") {
-          this.switch["vegan"][0] = !this.switch[theFilter][0];
-        } else if (theFilter === "vegan") {
-          this.switch["vegetarian"][0] = !this.switch[theFilter][0];
-        }
-      },
-      renderBadge() {
-        let result = "";
-
-        const properties = Object.keys(filterSwitch.switch);
-        for (const property of properties) {
-          if (filterSwitch.switch[property][0] === true) {
-            result += `<span id="${filterSwitch.switch[property][2]}" class="badge bg-${filterSwitch.switch[property][1]}">${filterSwitch.switch[property][3]}</span>`;
-          } else {
-            result += `<span id="${filterSwitch.switch[property][2]}" class="badge bg-light text-grey">${filterSwitch.switch[property][3]}</span>`;
-          }
-        }
-        return result;
-      },
-    };
+   
 
     //events listener
     home.addEventListener("click", () => {
@@ -111,7 +61,7 @@ tools
       toolBox.style.display = "none";
       searchForm.style.display = "block";
       advanceSearch.style.display = "block";
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
+      advanceSearch.innerHTML = filter.filterSwitch.renderBadge("allSt");
       attachEventBg();
     });
     tools.addEventListener("click", () => {
@@ -129,31 +79,30 @@ tools
       const veganBg = document.getElementById("veganBg");
       const glutenBg = document.getElementById("glutenBg");
       const dairyBg = document.getElementById("dairyBg");
-      const fodmapBg = document.getElementById("fodmapBg");
 
       allBg.addEventListener("click", () => {
-        filterSwitch.pressAll();
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        filter.filterSwitch.pressAll();
+        advanceSearch.innerHTML = filter.filterSwitch.renderBadge();
         attachEventBg();
       });
       vegetarianBg.addEventListener("click", () => {
-        filterSwitch.pressMe("vegetarian");
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        filter.filterSwitch.pressMe("vegetarian");
+        advanceSearch.innerHTML = filter.filterSwitch.renderBadge();
         attachEventBg();
       });
       veganBg.addEventListener("click", () => {
-        filterSwitch.pressMe("vegan");
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        filter.filterSwitch.pressMe("vegan");
+        advanceSearch.innerHTML = filter.filterSwitch.renderBadge();
         attachEventBg();
       });
       glutenBg.addEventListener("click", () => {
-        filterSwitch.pressMe("glutenFree");
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        filter.filterSwitch.pressMe("glutenFree");
+        advanceSearch.innerHTML = filter.filterSwitch.renderBadge();
         attachEventBg();
       });
       dairyBg.addEventListener("click", () => {
-        filterSwitch.pressMe("dairyFree");
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
+        filter.filterSwitch.pressMe("dairyFree");
+        advanceSearch.innerHTML = filter.filterSwitch.renderBadge();
         attachEventBg();
       });
     };
@@ -170,32 +119,6 @@ tools
       searchAction();
     });
 
-    //tool event listener
-
-    btnSubstitute.addEventListener('click',(e) => {
-        e.preventDefault();
-        fetchSubstitute(inputSubstitute.value).then((data) => {
-          console.log(data);
-          if (data.status === 'success') {
-            let text = '';
-            const subArr = data.substitutes.map((el) => `<li>${el}</li>`);
-            console.log(subArr);
-            text = subArr.join('');
-            console.log(text);
-            text = 'Found '+data.substitutes.length+' substitute(s) for '+inputSubstitute.value +'<br><ul>'+text+'</ul>';
-            substituteText.innerHTML = text;
-          }
-          else {
-
-            substituteText.innerHTML = `<font style="color:red">Could not find any substitude for ${inputSubstitute.value}
-            </font>`;
-          }
-        }).catch((e) => {
-          console.log(e);
-        })
-    })
-
-    //end tool event listener
 
 
     loadMoreBtn.addEventListener("click", () => {
@@ -259,20 +182,20 @@ tools
     function renderSearchQuery() {
       let queryString = "";
       // diet - single of either vegan or vegetarian , intorolance comma sep of diary, gluten
-      if (filterSwitch.switch.vegetarian[0]) {
-        queryString += `&diet=${filterSwitch.switch.vegetarian[4]}`;
-      } else if (filterSwitch.switch.vegan[0]) {
-        queryString += `&diet=${filterSwitch.switch.vegan[4]}`;
+      if (filter.filterSwitch.switch.vegetarian[0]) {
+        queryString += `&diet=${filter.filterSwitch.switch.vegetarian[4]}`;
+      } else if (filter.filterSwitch.switch.vegan[0]) {
+        queryString += `&diet=${filter.filterSwitch.switch.vegan[4]}`;
       }
       if (
-        filterSwitch.switch.glutenFree[0] &&
-        filterSwitch.switch.dairyFree[0]
+        filter.filterSwitch.switch.glutenFree[0] &&
+        filter.filterSwitch.switch.dairyFree[0]
       ) {
-        queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]},${filterSwitch.switch.dairyFree[4]}`;
-      } else if (filterSwitch.switch.glutenFree[0]) {
-        queryString += `&intolerances=${filterSwitch.switch.glutenFree[4]}`;
-      } else if (filterSwitch.switch.dairyFree[0]) {
-        queryString += `&intolerances=${filterSwitch.switch.dairyFree[4]}`;
+        queryString += `&intolerances=${filter.filterSwitch.switch.glutenFree[4]},${filter.filterSwitch.switch.dairyFree[4]}`;
+      } else if (filter.filterSwitch.switch.glutenFree[0]) {
+        queryString += `&intolerances=${filter.filterSwitch.switch.glutenFree[4]}`;
+      } else if (filter.filterSwitch.switch.dairyFree[0]) {
+        queryString += `&intolerances=${filter.filterSwitch.switch.dairyFree[4]}`;
       }
       return queryString;
     }
@@ -579,10 +502,7 @@ tools
       );
     }
 
-    function fetchSubstitute(keyword) {
-      return fetch(baseURL + `food/ingredients/substitutes?apiKey=${apiKey}&ingredientName=${keyword}`)
-      .then((resp) => resp.json());
-    }
+    
 
     function fetchRecipe(id) {
       return fetch(
@@ -592,12 +512,14 @@ tools
     }
 
     function fetchList(query) {
-      let notFoundText = '';
-      if (avdSearch === true && filterSwitch.switch.all[0] !== true) {
+      let notFoundText = "";
+      if (avdSearch === true && filter.filterSwitch.switch.all[0] !== true) {
         query += renderSearchQuery();
-        notFoundText = 'sorry please try another keyword (there is not dish to match the filter).';
+        notFoundText =
+          "sorry please try another keyword (there is not dish to match the filter).";
       } else {
-        notFoundText = 'We can not find any food you like, please try something like pasta :)'; 
+        notFoundText =
+          "We can not find any food you like, please try something like pasta :)";
       }
 
       console.log(query);
@@ -610,8 +532,7 @@ tools
         .then((data) => {
           if (data.totalResults === 0) {
             notifiedText.style.display = "block";
-            notifiedText.innerHTML =
-              `<span style='color:red'>${notFoundText}</span>`;
+            notifiedText.innerHTML = `<span style='color:red'>${notFoundText}</span>`;
           }
 
           spinner.style.visibility = "collapse";
@@ -628,5 +549,5 @@ tools
     }
 
     renderHome();
-  });
+  
 })();
