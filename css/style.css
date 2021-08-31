@@ -68,3 +68,11 @@
 .inputTool{
   width: 80%;
 }
+.btn-grey {
+  background-color: blanchedalmond;
+}
+
+.push-top {
+ margin-top: -32px;
+ z-index: 50;
+}
