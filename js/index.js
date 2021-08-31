@@ -2,7 +2,7 @@
 
 /* 
 To do :
-advance search 
+advance search --> fix vegan and vegetarian on off
 tools
 
 */
@@ -34,12 +34,16 @@ tools
     const searchForm = document.getElementById("search-form");
     const toolBox = document.getElementById("tool-box");
     const advanceSearch = document.getElementById("advance-search");
-
+    const inputSubstitute = document.getElementById("input-substitute");
+    const btnSubstitute = document.getElementById("btnSubstitute");
+    const substituteText = document.getElementById("substituteText");
+    const maxInputGI = 10; //maximum number of input that gi tool can add
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
     let unit = "us"; // default unit of ingredients
     let ingredients = {}; // object to store ingredients
     let avdSearch = false;
+    
 
     //filter switch to store search filter
     const filterSwitch = {
@@ -92,6 +96,7 @@ tools
     home.addEventListener("click", () => {
       avdSearch = false;
       navActive("home");
+      notifiedText.style.display = "none";
       searchForm.style.display = "block";
       recipeInfo.style.display = "block";
       toolBox.style.display = "none";
@@ -101,6 +106,7 @@ tools
 
     advance.addEventListener("click", () => {
       avdSearch = true;
+      notifiedText.style.display = "none";
       navActive("advance");
       toolBox.style.display = "none";
       searchForm.style.display = "block";
@@ -110,6 +116,7 @@ tools
     });
     tools.addEventListener("click", () => {
       navActive("tools");
+      notifiedText.style.display = "none";
       searchForm.style.display = "none";
       recipeInfo.style.display = "none";
       resultList.style.display = "none";
@@ -149,11 +156,6 @@ tools
         advanceSearch.innerHTML = filterSwitch.renderBadge();
         attachEventBg();
       });
-      /*fodmapBg.addEventListener("click", () => {
-        filterSwitch.pressMe("lowFodMap");
-        advanceSearch.innerHTML = filterSwitch.renderBadge();
-        attachEventBg();
-      });*/
     };
 
     searchText.addEventListener("keyup", (e) => {
@@ -167,6 +169,34 @@ tools
       e.preventDefault();
       searchAction();
     });
+
+    //tool event listener
+
+    btnSubstitute.addEventListener('click',(e) => {
+        e.preventDefault();
+        fetchSubstitute(inputSubstitute.value).then((data) => {
+          console.log(data);
+          if (data.status === 'success') {
+            let text = '';
+            const subArr = data.substitutes.map((el) => `<li>${el}</li>`);
+            console.log(subArr);
+            text = subArr.join('');
+            console.log(text);
+            text = 'Found '+data.substitutes.length+' substitute(s) for '+inputSubstitute.value +'<br><ul>'+text+'</ul>';
+            substituteText.innerHTML = text;
+          }
+          else {
+
+            substituteText.innerHTML = `<font style="color:red">Could not find any substitude for ${inputSubstitute.value}
+            </font>`;
+          }
+        }).catch((e) => {
+          console.log(e);
+        })
+    })
+
+    //end tool event listener
+
 
     loadMoreBtn.addEventListener("click", () => {
       offset = offset + number;
@@ -256,7 +286,7 @@ tools
       resultList.style.visibility = "visible";
       if (searchText.value.trim().length > 0) {
         spinner.style.visibility = "visible";
-        notifiedText.style.visibility = "hidden";
+        notifiedText.style.display = "none";
         fetchList(searchText.value);
       } else {
         notifiedText.style.visibility = "visible";
@@ -549,6 +579,11 @@ tools
       );
     }
 
+    function fetchSubstitute(keyword) {
+      return fetch(baseURL + `food/ingredients/substitutes?apiKey=${apiKey}&ingredientName=${keyword}`)
+      .then((resp) => resp.json());
+    }
+
     function fetchRecipe(id) {
       return fetch(
         baseURL +
@@ -557,10 +592,12 @@ tools
     }
 
     function fetchList(query) {
+      let notFoundText = '';
       if (avdSearch === true && filterSwitch.switch.all[0] !== true) {
         query += renderSearchQuery();
+        notFoundText = 'sorry please try another keyword (there is not dish to match the filter).';
       } else {
-        //remain same query word
+        notFoundText = 'We can not find any food you like, please try something like pasta :)'; 
       }
 
       console.log(query);
@@ -572,9 +609,9 @@ tools
         .then((resp) => resp.json())
         .then((data) => {
           if (data.totalResults === 0) {
-            notifiedText.style.visibility = "visible";
+            notifiedText.style.display = "block";
             notifiedText.innerHTML =
-              "<span style='color:red'>We can not find any food you like, please try something like pasta :)</span>";
+              `<span style='color:red'>${notFoundText}</span>`;
           }
 
           spinner.style.visibility = "collapse";

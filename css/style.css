@@ -5,6 +5,10 @@
 .pt-3 {
   padding-top: 30px;
 }
+
+.pt-45 {
+  padding-top: 45px;
+}
 .pt-10 {
   padding-top: 10px;
 }
@@ -60,4 +64,7 @@
 }
 .pt-05{
     padding-top: 5px;
+}
+.inputTool{
+  width: 80%;
 }

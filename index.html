@@ -42,7 +42,7 @@
         ><span style="color: #ed8d28">Z</span>
       </h1>
       <h6 class="font-monospace text-center d-none d-md-block"></h6>
-      <form id="search-form">
+      <form id="search-form" class="pt-3">
         <div class="row mb-3">
           <div class="col-2 col-sm-3"></div>
           <div class="col-8 col-sm-6">
@@ -59,19 +59,44 @@
           </button>
         </div>
       </form>
-      <div id="tool-box" class="container-fluid">
-        <form id="tool-form">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Email address</label
-            >
-            <input type="text" class="form-control" id="ingredient" />
-            <div id="ingredient-text" class="form-text">Please</div>
+      <div id="tool-box" class="container-fluid pt-20p pt-45">
+        <div class="row">
+          <div class="col-sm-6">
+        <div class="card text-dark bg-light mb-3" style="max-width: 25rem;">
+          <div class="card-header">Ingredient Substitutes</div>
+          <div class="card-body">
+            <input id="input-substitute" class="inputTool" placeholder="fill in item you dont have eg. butter"/><button id="btnSubstitute" class="btn btn-sm btn-info">find</button>
+            <p id="substituteText" class="card-text"></p>
           </div>
-          <button type="submit" class="btn btn-primary">
-            Ingredient Analysis
-          </button>
-        </form>
+        </div>
+        </div>
+        <div class="col-sm-6">
+        <div class="card text-dark bg-light mb-3" style="max-width: 25rem;float:right;width:100%">
+          <div class="card-header">Convert Amounts</div>
+          <div class="card-body">
+            <p class="card-text"></p>
+          </div>
+        </div>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card text-dark bg-light mb-3" style="max-width: 25rem;">
+              <div class="card-header">Nutrition Analysis</div>
+              <div class="card-body">
+                <p class="card-text"></p>
+              </div>
+            </div>
+            </div>
+            <div class="col-sm-6">
+            <div class="card text-dark bg-light mb-3" style="max-width: 25rem;float:right;width:100%">
+              <div class="card-header">Compute GL/GI</div>
+              <div id="giDiv" class="card-body">
+                <p id="giText" class="card-text"></p>
+              </div>
+            </div>
+            </div>
+        </div>
       </div>
       <div id="top-info-box" class="container-fluid text-center">
         <div id="notified-text"></div>
