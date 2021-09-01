@@ -1,46 +1,56 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="./css/style.css" />
-    <title>FoodieZ: advance food search...</title>
-
-
-  </head>
-
+  <style>
+  .loader {
+    position: relative;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 70px;
+    height: 70px;
+    left:50%;
+    top:50%;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  #overlay{
+      position: absolute;
+      top:0px;
+      left:0px;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: .5;
+  }
+  .container{
+      position:relative;
+      height: 300px;
+      width: 200px;
+      border:1px solid
+  }
   
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+  </head>
   <body>
-    <form>
-                
-      <input type="text" id="input-amount" class="inputamount" name="convertAmount" placeholder="1"/>
-      <select id="from-convert" class="selecttool">
-        <option value="cups" selected="selected">Cups</option>
-        <option value="ml">ml</option>
-        <option value="oz">oz</option>
-        <option value="grams">grams</option>
-      </select>OF
-      <input type="text" id="input-convert" class="inputconvert" placeholder="eg. flour"/>
-      TO:
-      <select id="to-convert" class="selecttool">
-        <option value="grams" selected="selected">grams</option>
-        <option value="cups">cups</option>
-        <option value="ml">ml</option>
-        <option value="oz">oz</option>
-      </select>
-      <button id="btn-convert" class="btn btn-sm btn-info">convert</button>
-      <p id="convert-text" class="card-text"></p>
-    </form>
-    <script src="./js/test.js"></script>
-    
+  <h2>How To Create A Loader</h2>
+  
+  <div class="container">
+    <h3>Overlay over this div</h3>
+    <div id="overlay">
+        <div class="loader"></div>
+    </div>
+  <div>
   </body>
 </html>
-
-

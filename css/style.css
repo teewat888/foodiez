@@ -73,9 +73,15 @@
 }
 
 .push-top {
- margin-top: -32px;
- z-index: 50;
+ margin-top: -18px;
+ z-index: 1000;
 }
+
+.push-right {
+  margin-top: -45px;
+  margin-left: 130px;
+  z-index: 1000;
+ }
 
 .sm-txt1 {
   font-size: 13px;
@@ -101,4 +107,15 @@
 }
 .btn4GI {
   margin-bottom: 5px;
+}
+
+.myZI {
+  z-index: 10;
+}
+
+#overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5) url(spinner.gif) center center no-repeat;
 }

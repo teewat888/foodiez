@@ -1,5 +1,6 @@
 const baseURL = "https://api.spoonacular.com/";
 const localURL = "http://localhost:3000/";
+const loadingText = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
 
 const filter = (function() {
 const filterSwitch = {
@@ -50,5 +51,7 @@ const filterSwitch = {
       return {
           filterSwitch
       }
+
+    
 
     })();

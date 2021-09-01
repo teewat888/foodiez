@@ -13,13 +13,17 @@ const fzTool = (() => {
   const toConvert = document.getElementById("to-convert");
   const inputAmount = document.getElementById("input-amount");
   const divGI = document.getElementById("divGI");
+  const input4GI = document.querySelector(".input4GI");
   const btnAddGi = document.querySelector("button[name='addIng']");
   const maxGiElements = 6; // the maximum number of dynamic ingredients to put for gi calculator
   const giText = document.getElementById("gi-text");
+  const btnGI = document.getElementById("btn-gi");
 
+  
   //tool event listener
 
   btnAddGi.addEventListener("click", addInputGi);
+  btnGI.addEventListener("click", getGI);
 
   inputTextEvent(inputSubstitute, substituteText, fetchSubstitute, "name");
   buttonEvent(
@@ -62,25 +66,43 @@ const fzTool = (() => {
     element.innerHTML = dText;
   }
   function removeText(element) {
-    element.innerHTML = '';
+    element.innerHTML = "";
   }
 
   //end tool event listener
   function addInputGi() {
     const newInput = document.createElement("input");
     const removeBtn = document.createElement("button");
+    const egTexts = [
+      "eg. 100g broccoli",
+      "eg. 1 egg",
+      "eg. 1 kiwi",
+      "eg. 100g watermelon",
+      "eg.1 glass of water",
+      "eg. 200g chicken",
+      "eg. 2cups rice",
+    ];
+    const randomEg = Math.floor(Math.random() * 7);
     newInput.setAttribute("type", "text");
     newInput.setAttribute("class", "input4GI");
+    newInput.setAttribute("placeholder", egTexts[randomEg]);
     newInput.setAttribute("value", "");
     removeBtn.setAttribute("class", "btn btn-sm btn-danger btn4GI");
     removeBtn.setAttribute("name", "removeBtn");
     removeBtn.innerText = "-";
-    if (isMaxLimit(document.querySelectorAll('input[class="input4GI"]').length)) {
-      displayText(giText,'<span style=\'color:red\'>You have reached maximum number of input!</span>');
+    if (
+      isMaxLimit(document.querySelectorAll('input[class="input4GI"]').length)
+    ) {
+      displayText(
+        giText,
+        "<span style='color:red'>You have reached maximum number of input!</span>"
+      );
     } else {
       removeText(giText);
-      divGI.appendChild(newInput);
-      divGI.appendChild(removeBtn);
+      //divGI.appendChild(newInput);
+      //divGI.appendChild(removeBtn);
+      divGI.insertBefore(newInput, input4GI);
+      divGI.insertBefore(removeBtn, input4GI);
       removeBtn.addEventListener("click", () => {
         removeInputGi(newInput, removeBtn);
       });
@@ -109,9 +131,12 @@ const fzTool = (() => {
     if (targetText.id === "convert-text") {
       if (inputAmount.value.length === 0 || isNaN(inputAmount.value)) {
         inputAmount.focus();
-        displayText(targetText,'<span style=\'color:red\'>Please input amount in NUMBER eg, 2 </span>');
+        displayText(
+          targetText,
+          "<span style='color:red'>Please input amount in NUMBER eg, 2 </span>"
+        );
         //targetText.innerHTML =
-         // "<span style='color:red'>Please input amount in NUMBER eg, 2 </span>";
+        // "<span style='color:red'>Please input amount in NUMBER eg, 2 </span>";
         return false;
       }
     }
@@ -124,14 +149,21 @@ const fzTool = (() => {
         let suggestArr = myIngredient.getSuggestions(keyword.value);
         console.log(suggestArr);
         if (suggestArr.length === 0) {
-          displayText(targetText,`The <font style="color:red">${keyword.value}</font> was not in the database please try something else`);
+          displayText(
+            targetText,
+            `The <font style="color:red">${keyword.value}</font> was not in the database please try something else`
+          );
           //targetText.innerHTML = `The <font style="color:red">${keyword.value}</font> was not in the database please try something else`;
           return false;
         } else {
           removeText(targetText);
           //targetText.innerText = "";
           const ul = document.createElement("ul");
-          ul.setAttribute("class", "list-unstyled push-top");
+          if (targetText.id === "convert-text") {
+            ul.setAttribute("class", "list-unstyled push-right");
+          } else {
+            ul.setAttribute("class", "list-unstyled push-top");
+          }
           suggestArr.forEach((el) => {
             const li = document.createElement("li");
             li.setAttribute("data", el.Ingredient);
@@ -159,10 +191,71 @@ const fzTool = (() => {
       }
     } else {
       keyword.focus();
-      displayText(targetText,'<span style=\'color:red\'>Please input something :)</span>');
+      displayText(
+        targetText,
+        "<span style='color:red'>Please input something :)</span>"
+      );
       //targetText.innerHTML =
-        //"<span style='color:red'>Please input something :)</span>";
+      //"<span style='color:red'>Please input something :)</span>";
     }
+  }
+
+  function getGI() {
+    displayText(giText,loadingText);
+    const input4GI = document.querySelectorAll('input[class="input4GI"]');
+    const ingredients = [];
+    input4GI.forEach((el) => {
+      el.value = el.value.trim();
+      if (el.value.length != 0) {
+        ingredients.push(el.value);
+      }
+    });
+    //console.log(ingredients);
+    const confObj = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        ingredients: ingredients,
+      }),
+    };
+    //console.log(confObj);
+    
+    fetch(baseURL + `food/ingredients/glycemicLoad?apiKey=${apiKey}`, confObj)
+      .then((resp) => resp.json())
+      .then((data) => {
+        
+        if (data.status === "success") {
+          displayText(giText, renderGI(data));
+        } else {
+          displayText(
+            giText,
+            "<span style='color:red'>error! please try other input combination!</span>"
+          );
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  function renderGI(data) {
+    let result = "";
+    result += `<div class="row row-col-2 sm-txt2">
+    <div class="col-6"><b>Total GlycemicLoad</b></div>
+    <div class="col-6"><b>${data.totalGlycemicLoad}</b></div>
+    </div>`;
+
+    data.ingredients.forEach((el) => {
+      result += `<div class="row row-col-2 sm-txt2"><div class="col-6">${el.original}</div>
+      <div class="col-6">GI = ${el.glycemicIndex} , GL = ${el.glycemicLoad}</div>
+      </div>`;
+    })
+
+     //console.log(result);
+    return result;
   }
 
   function fetchSubstitute(keyword) {
@@ -185,10 +278,16 @@ const fzTool = (() => {
             '<br><ul class="sm-txt2" >' +
             text +
             "</ul>";
-          substituteText.innerHTML = text;
+          displayText(substituteText, text);
+          //substituteText.innerHTML = text;
         } else {
-          substituteText.innerHTML = `<font style="color:red">Could not find any substitude for ${keyword}
-              </font>`;
+          displayText(
+            substituteText,
+            `<font style="color:red">Could not find any substitude for ${keyword}
+          </font>`
+          );
+          //substituteText.innerHTML = `<font style="color:red">Could not find any substitude for ${keyword}
+          //</font>`;
         }
       })
       .catch((e) => {
@@ -212,7 +311,8 @@ const fzTool = (() => {
         );
         text = subArr.join("");
         text = '<div class="row row-col-2 sm-txt1" >' + text + "</div>";
-        nutritionText.innerHTML = text;
+        //nutritionText.innerHTML = text;
+        displayText(nutritionText, text);
       })
       .catch((e) => {
         console.log(e);
@@ -232,14 +332,23 @@ const fzTool = (() => {
         );
 
         if (data.status === undefined) {
-          convertText.innerHTML = data.answer;
+          displayText(convertText, data.answer);
+          //convertText.innerHTML = data.answer;
         } else {
-          convertText.innerHTML = `<font style="color:red">sorry, no conversion available! please try something else
-              </font>`;
+          displayText(
+            convertText,
+            `<font style="color:red">sorry, no conversion available! please try something else
+          </font>`
+          );
+          //convertText.innerHTML = `<font style="color:red">sorry, no conversion available! please try something else
+          // </font>`;
         }
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+  return {
+    displayText: displayText
   }
 })();

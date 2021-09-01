@@ -17,6 +17,7 @@
   </head>
   <body>
     <div class="container">
+      
       <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
           <li class="nav-item">
@@ -57,6 +58,7 @@
           </button>
         </div>
       </form>
+      
       <div id="tool-box" class="container-fluid pt-20p pt-45">
         <div class="row">
           <div class="col-sm-6">
@@ -80,20 +82,6 @@
             <div
               class="card text-dark bg-light mb-3"
               style="max-width: 25rem; float: right; width: 100%">
-              <div class="card-header">GL/GI Calculator</div>
-              <div class="card-body">
-                <div id="divGI" class="input-group mb-3">
-                <input type="text" class="input4GI" /><button name="addIng" class="btn btn-sm btn-primary btn4GI">+</button>&nbsp;eg. 2 cups rice
-              </div>
-                <button class="btn btn-sm btn-info">Calculate GL/GI</button> 
-                <p id="gi-text" class="card-text"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="card text-dark bg-light mb-3" style="max-width: 25rem">
               <div class="card-header">Nutrition Analysis (per 100g)</div>
               <div class="card-body">
                 <div class="input-group mb-3">
@@ -109,18 +97,17 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6">
-            <div
-              class="card text-dark bg-light mb-3"
-              style="max-width: 25rem; float: right; width: 100%"
-            >
+            <div class="card text-dark bg-light mb-3" style="max-width: 25rem">
               <div class="card-header">Convert Amounts</div>
               <div class="card-body">
                 <form>
-                  <div class="input-group mb-3">
+                  <div class="input-group mb-3 myZI">
                 <input type="text" id="input-amount" class="inputamount red-input" name="convertAmount" />
                 <select id="from-convert" class="selecttool">
-                  <option value="cups" selected="selected">Cups</option>
+                  <option value="cups" selected="selected">cups</option>
                   <option value="ml">ml</option>
                   <option value="oz">oz</option>
                   <option value="grams">grams</option>
@@ -140,8 +127,29 @@
               </div>
             </div>
           </div>
+          <div class="col-sm-6">
+            <div
+              class="card text-dark bg-light mb-3"
+              style="max-width: 25rem; float: right; width: 100%"
+            > 
+            <div class="card-header">GL/GI Calculator</div>
+              <div class="card-body">
+                <div id="divGI" class="input-group mb-3">
+                <input type="text" class="input4GI" placeholder="eg. 2 cups rice" /><button name="addIng" class="btn btn-sm btn-primary btn4GI">+</button>
+              </div>
+                <button id="btn-gi" class="btn btn-sm btn-info">Calculate GL/GI</button> 
+                <p id="gi-text" class="card-text pt-10"></p>
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>            
+            </div>
+          </div>
         </div>
       </div>
+      
       <div id="top-info-box" class="container-fluid text-center">
         <div id="notified-text"></div>
         <!-- notifed text eg. search text validation-->
