@@ -18,14 +18,14 @@ tools
     const searchText = document.getElementById("searchText");
     const resultList = document.getElementById("result-list");
     const recipeInfo = document.getElementById("recipe-info");
-    const spinner = document.getElementById("spinner");
-    const alert = document.getElementById("alert");
+    //const spinner = document.getElementById("spinner");
+    //const alert = document.getElementById("alert");
     const loadMoreBtn = document.createElement("button");
     const closeContent = document.getElementById("closeContent");
     const infoBox = document.getElementById("info-box");
     const topInfoBox = document.getElementById("top-info-box");
-    const spinnerTop = document.getElementById("spinner-top");
-    const alertTop = document.getElementById("alert-top");
+    //const spinnerTop = document.getElementById("spinner-top");
+    //const alertTop = document.getElementById("alert-top");
     const home = document.getElementById("home");
     const advance = document.getElementById("advance");
     const tools = document.getElementById("tools");
@@ -33,6 +33,8 @@ tools
     const searchForm = document.getElementById("search-form");
     const toolBox = document.getElementById("tool-box");
     const advanceSearch = document.getElementById("advance-search");
+    const loadingTop = document.getElementById("loading-top");
+    const loadingBottom = document.getElementById("loading-bottom");
     
     let number = 18; //number of result per fetch
     let offset = 0; // offset for pagination
@@ -46,7 +48,7 @@ tools
     home.addEventListener("click", () => {
       avdSearch = false;
       navActive("home");
-      notifiedText.style.display = "none";
+     // notifiedText.style.display = "none";
       searchForm.style.display = "block";
       recipeInfo.style.display = "block";
       toolBox.style.display = "none";
@@ -56,7 +58,7 @@ tools
 
     advance.addEventListener("click", () => {
       avdSearch = true;
-      notifiedText.style.display = "none";
+     // notifiedText.style.display = "none";
       navActive("advance");
       toolBox.style.display = "none";
       searchForm.style.display = "block";
@@ -66,7 +68,7 @@ tools
     });
     tools.addEventListener("click", () => {
       navActive("tools");
-      notifiedText.style.display = "none";
+    //  notifiedText.style.display = "none";
       searchForm.style.display = "none";
       recipeInfo.style.display = "none";
       resultList.style.display = "none";
@@ -123,7 +125,8 @@ tools
 
     loadMoreBtn.addEventListener("click", () => {
       offset = offset + number;
-      spinner.style.visibility = "visible";
+      //spinner.style.visibility = "visible";
+      fzTool.displayText(loadingBottom,loadingText);
       fetchList(searchText.value);
     });
 
@@ -131,25 +134,29 @@ tools
 
     const cardEvent = (card, id) => {
       card.addEventListener("click", () => {
-        spinner.style.visibility = "visible";
+        //spinner.style.visibility = "visible";
+        fzTool.displayText(loadingBottom,loadingText);
         resultList.style.visibility = "hidden";
         document.documentElement.scrollTop = 0;
-        spinnerTop.style.visibility = "visible";
+        fzTool.displayText(loadingTop,loadingText);
         fetchRecipe(id)
           .then((data) => {
             //console.log(data);
             infoBox.style.visibility = "collapse";
-            spinner.style.visibility = "collapse";
-            alert.style.visibility = "collapse";
+            //spinner.style.visibility = "collapse";
+            fzTool.displayText(loadingBottom,'');
+            //alert.style.visibility = "collapse";
             topInfoBox.style.height = "0";
-            spinnerTop.style.visibility = "collapse";
-            alertTop.style.visibility = "collapse";
+            //spinnerTop.style.visibility = "collapse";
+           // alertTop.style.visibility = "collapse";
+           fzTool.displayText(loadingTop,'');
 
             renderRecipe(data);
           })
           .catch((e) => {
             console.log(e);
-            alertTop.style.visibility = "visible";
+            //alertTop.style.visibility = "visible";
+            fzTool.displayText(loadingTop,errorText);
           });
       });
     };
@@ -208,8 +215,8 @@ tools
       recipeInfo.style.visibility = "none";
       resultList.style.visibility = "visible";
       if (searchText.value.trim().length > 0) {
-        spinner.style.visibility = "visible";
-        notifiedText.style.display = "none";
+        //spinner.style.visibility = "visible";
+        fzTool.displayText(loadingBottom,loadingText);
         fetchList(searchText.value);
       } else {
         notifiedText.style.visibility = "visible";
@@ -242,7 +249,8 @@ tools
     }
     //render individual recipe
     function renderRecipe(data) {
-      alert.style.visibility = "collapse";
+      //alert.style.visibility = "collapse";
+      fzTool.displayText(loadingBottom,'');
       closeContent.style.visibility = "visible";
       const imageDiv = document.createElement("div"); //image wrapper
       const infoDiv = document.createElement("div"); // info wrapper  (info - diet,ingredients,methods,nutrition)
@@ -426,9 +434,11 @@ tools
 
     //render recipes
     function renderList(data) {
-      alert.style.visibility = "collapse";
-      alertTop.style.visibility = "collapse";
-      spinnerTop.style.visibility = "collapse";
+      //alert.style.visibility = "collapse";
+      fzTool.displayText(loadingBottom,'');
+      fzTool.displayText(loadingTop,'');
+      //alertTop.style.visibility = "collapse";
+      //spinnerTop.style.visibility = "collapse";
       topInfoBox.style.height = "0";
 
       const totalResults = data.totalResults;
@@ -481,7 +491,8 @@ tools
     }
     //home page
     function renderHome() {
-      alert.style.visibility = "collapse";
+      //alert.style.visibility = "collapse";
+      fzTool.displayText(loadingBottom,'');
       toolBox.style.display = "none";
       if (config.jokeEnable) {
         const joke = document.getElementsByTagName("h6")[0];
@@ -515,6 +526,7 @@ tools
       let notFoundText = "";
       if (avdSearch === true && filter.filterSwitch.switch.all[0] !== true) {
         query += renderSearchQuery();
+        fzTool.displayText(loadingBottom,loadingText);
         notFoundText =
           "sorry please try another keyword (there is not dish to match the filter).";
       } else {
@@ -535,16 +547,18 @@ tools
             notifiedText.innerHTML = `<span style='color:red'>${notFoundText}</span>`;
           }
 
-          spinner.style.visibility = "collapse";
+          //spinner.style.visibility = "collapse";
+          fzTool.displayText(loadingBottom,'');
           //infoBox.style.height = "0";
-          alert.style.visibility = "collapse";
+          //alert.style.visibility = "collapse";
 
           renderList(data);
         })
         .catch((e) => {
           console.log(e);
-          alert.style.visibility = "visible";
-          spinner.style.visibility = "collapse";
+          //alert.style.visibility = "visible";
+          fzTool.displayText(loadingBottom,errorText);
+          //spinner.style.visibility = "collapse";
         });
     }
 

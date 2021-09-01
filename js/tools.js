@@ -173,8 +173,10 @@ const fzTool = (() => {
               keyword.value = el.Ingredient;
               console.log(el.id);
               if (ftype === "name") {
+                displayText(targetText,loadingText);
                 fetch(keyword.value);
               } else if (ftype === "id") {
+                displayText(targetText,loadingText);
                 fetch(el.id);
               }
             });
@@ -184,8 +186,10 @@ const fzTool = (() => {
         }
       } else {
         if (ftype === "name") {
+          displayText(targetText,loadingText);
           fetch(keyword.value);
         } else if (ftype === "id") {
+          displayText(targetText,loadingText);
           fetch(myIngredient.getIngId(keyword.value));
         }
       }
@@ -238,6 +242,7 @@ const fzTool = (() => {
       })
       .catch((e) => {
         console.log(e);
+        displayText(giText,errorText);
       });
   }
 
@@ -292,6 +297,7 @@ const fzTool = (() => {
       })
       .catch((e) => {
         console.log(e);
+        displayText(substituteText,errorText);
       });
   }
 
@@ -316,6 +322,7 @@ const fzTool = (() => {
       })
       .catch((e) => {
         console.log(e);
+        displayText(nutritionText,errorText);
       });
   }
 
@@ -346,6 +353,7 @@ const fzTool = (() => {
       })
       .catch((e) => {
         console.log(e);
+        displayText(convertText,errorText);
       });
   }
   return {

@@ -1,6 +1,7 @@
 const baseURL = "https://api.spoonacular.com/";
 const localURL = "http://localhost:3000/";
-const loadingText = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+const loadingText = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+const errorText = '<span style="color:red"><b>Error! please try again later...</b></span>';
 
 const filter = (function() {
 const filterSwitch = {
