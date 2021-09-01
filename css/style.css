@@ -76,3 +76,29 @@
  margin-top: -32px;
  z-index: 50;
 }
+
+.sm-txt1 {
+  font-size: 13px;
+}
+.sm-txt2 {
+  font-size: 15px;
+}
+.selecttool {
+  width: 20%;
+}
+.inputconvert{
+  width: 30%;
+}
+.inputamount{
+  width: 10%;
+}
+.red-input:focus {
+  background: yellow;
+  color: red;
+}
+.input4GI {
+  margin-bottom: 5px;
+}
+.btn4GI {
+  margin-bottom: 5px;
+}

@@ -50,9 +50,7 @@
           </div>
           <div class="col-2 col-sm-3"></div>
         </div>
-        <div id="advance-search" class="text-center">
-            
-        </div>
+        <div id="advance-search" class="text-center"></div>
         <div class="mb-3 text-center pt-3">
           <button id="searchFood" class="btn-lg btn-danger">
             FoodieZ search
@@ -62,44 +60,86 @@
       <div id="tool-box" class="container-fluid pt-20p pt-45">
         <div class="row">
           <div class="col-sm-6">
-        <div class="card text-dark bg-light mb-3" style="max-width: 25rem;">
-          <div class="card-header">Ingredient Substitutes</div>
-          <div class="card-body">
-            <input id="input-substitute" class="inputTool" placeholder="fill in item you dont have eg. butter"/><button id="btn-substitute" class="btn btn-sm btn-info">find</button>
-            <p id="substitute-text" class="card-text"></p>
+            <div class="card text-dark bg-light mb-3" style="max-width: 25rem">
+              <div class="card-header">Ingredient Substitutes</div>
+              <div class="card-body">
+                <div class="input-group mb-3">
+                <input
+                  id="input-substitute" type="text"
+                  class="inputTool"
+                  placeholder="fill in item you dont have eg. butter"
+                /><button id="btn-substitute" class="btn btn-sm btn-info">
+                  find
+                </button>
+              </div>
+                <p id="substitute-text" class="card-text"></p>
+              </div>
+            </div>
           </div>
-        </div>
-        </div>
-        <div class="col-sm-6">
-        <div class="card text-dark bg-light mb-3" style="max-width: 25rem;float:right;width:100%">
-          <div class="card-header">Convert Amounts</div>
-          <div class="card-body">
-            
-            <p class="card-text"></p>
+          <div class="col-sm-6">
+            <div
+              class="card text-dark bg-light mb-3"
+              style="max-width: 25rem; float: right; width: 100%">
+              <div class="card-header">GL/GI Calculator</div>
+              <div class="card-body">
+                <div id="divGI" class="input-group mb-3">
+                <input type="text" class="input4GI" /><button name="addIng" class="btn btn-sm btn-primary btn4GI">+</button>&nbsp;eg. 2 cups rice
+              </div>
+                <button class="btn btn-sm btn-info">Calculate GL/GI</button> 
+                <p id="gi-text" class="card-text"></p>
+              </div>
+            </div>
           </div>
-        </div>
-        </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
-            <div class="card text-dark bg-light mb-3" style="max-width: 25rem;">
+            <div class="card text-dark bg-light mb-3" style="max-width: 25rem">
               <div class="card-header">Nutrition Analysis (per 100g)</div>
               <div class="card-body">
-                <input id="input-nutrition" class="inputTool" placeholder="fill in an item eg. banana"/><button id="btn-nutrition" class="btn btn-sm btn-info">analyse</button>
+                <div class="input-group mb-3">
+                <input type="text"
+                  id="input-nutrition"
+                  class="inputTool"
+                  placeholder="fill in an item eg. banana"
+                /><button id="btn-nutrition" class="btn btn-sm btn-info">
+                  analyse
+                </button>
+              </div>
                 <p id="nutrition-text" class="card-text"></p>
               </div>
             </div>
-            </div>
-            <div class="col-sm-6">
-            <div class="card text-dark bg-light mb-3" style="max-width: 25rem;float:right;width:100%">
-              <div class="card-header">Compute GL/GI</div>
-              <div id="giDiv" class="card-body">
-
-                <button id="giBtn">Calulate GL/GI</button>
-                <p id="giText" class="card-text"></p>
+          </div>
+          <div class="col-sm-6">
+            <div
+              class="card text-dark bg-light mb-3"
+              style="max-width: 25rem; float: right; width: 100%"
+            >
+              <div class="card-header">Convert Amounts</div>
+              <div class="card-body">
+                <form>
+                  <div class="input-group mb-3">
+                <input type="text" id="input-amount" class="inputamount red-input" name="convertAmount" />
+                <select id="from-convert" class="selecttool">
+                  <option value="cups" selected="selected">Cups</option>
+                  <option value="ml">ml</option>
+                  <option value="oz">oz</option>
+                  <option value="grams">grams</option>
+                </select> &nbsp;of&nbsp;
+                <input type="text" id="input-convert" class="inputconvert red-input" placeholder="eg. flour"/>
+                &nbsp;to&nbsp;
+                <select id="to-convert" class="selecttool">
+                  <option value="grams" selected="selected">grams</option>
+                  <option value="cups">cups</option>
+                  <option value="ml">ml</option>
+                  <option value="oz">oz</option>
+                </select>
+               </div>
+                <button id="btn-convert" class="btn btn-sm btn-info">convert</button>
+                <p id="convert-text" class="card-text"></p>
+              </form>
               </div>
             </div>
-            </div>
+          </div>
         </div>
       </div>
       <div id="top-info-box" class="container-fluid text-center">
@@ -133,10 +173,10 @@
         </div>
       </footer>
     </div>
-    <script src="./js/init.js"></script>
-    <script src="./js/tools.js"></script>
-    <script src="./js/ingredients.js"></script>
-    <script src="./js/apiKey.js"></script>
-    <script src="./js/index.js"></script>
+    <script src="./js/init.js" defer></script>
+    <script src="./js/tools.js" defer></script>
+    <script src="./js/ingredients.js" defer></script>
+    <script src="./js/apiKey.js" defer></script>
+    <script src="./js/index.js" defer></script>
   </body>
 </html>

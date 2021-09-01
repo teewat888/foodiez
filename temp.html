@@ -16,72 +16,31 @@
 
   </head>
 
-  function renderRecipe(data) {
-    alert.style.visibility = "collapse";
-    closeContent.style.visibility = "visible";
-    const topContent = document.createElement("div");
-    topContent.setAttribute("class", "row");
-    topContent.innerHTML = `<div class="col-md-6 pt-5 ">
-      <img alt="${data.title}" src="${data.image}" class="rounded ml-8"/>
-      </div>
-      <div class="col-md-6">
-      </div>`;
-    recipeInfo.appendChild(topContent);
-  }
+  
   <body>
-    
-    <script src="./js/ingredients.js"></script>
+    <form>
+                
+      <input type="text" id="input-amount" class="inputamount" name="convertAmount" placeholder="1"/>
+      <select id="from-convert" class="selecttool">
+        <option value="cups" selected="selected">Cups</option>
+        <option value="ml">ml</option>
+        <option value="oz">oz</option>
+        <option value="grams">grams</option>
+      </select>OF
+      <input type="text" id="input-convert" class="inputconvert" placeholder="eg. flour"/>
+      TO:
+      <select id="to-convert" class="selecttool">
+        <option value="grams" selected="selected">grams</option>
+        <option value="cups">cups</option>
+        <option value="ml">ml</option>
+        <option value="oz">oz</option>
+      </select>
+      <button id="btn-convert" class="btn btn-sm btn-info">convert</button>
+      <p id="convert-text" class="card-text"></p>
+    </form>
+    <script src="./js/test.js"></script>
     
   </body>
 </html>
 
 
-//render recipes
-    function renderList(data) {
-      alert.style.visibility = "collapse";
-      alertTop.style.visibility = "collapse";
-      spinnerTop.style.visibility = "collapse";
-      topInfoBox.style.height = "0";
-      //display no search result
-      const totalResults = data.totalResults;
-      //idx to track slice element to get 6 slices each row (idx+6)
-      let idx = 0;
-      // i to limit the max rows to display each time
-      for (let i = 0; i < 3; i++) {
-        const list = document.createElement("div");
-        list.setAttribute("class", "row mb-3 text-center");
-        let choppedData = data.results.slice(idx, idx + 6); //chopped data = number of columns
-        choppedData.forEach((element) => {
-          list.appendChild(cardDisplay(element));
-        });
-        idx = idx + 6; // offset the chopped range
-        resultList.appendChild(list);
-
-        loadMore(totalResults);
-      }
-    }
-
-    allBg.addEventListener("click", () => {
-      filterSwitch.pressAll();
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });
-    vegetarianBg.addEventListener("click", () => {
-      filterSwitch.pressMe("vegetarian");
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });
-    veganBg.addEventListener("click", () => {
-      filterSwitch.pressMe("vegan");
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });
-    glutenBg.addEventListener("click", () => {
-      filterSwitch.pressMe("glutenFree");
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });
-    dairyBg.addEventListener("click", () => {
-      filterSwitch.pressMe("dairyFree");
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });
-    fodmapBg.addEventListener("click", () => {
-      filterSwitch.pressMe("lowFodMap");
-      advanceSearch.innerHTML = filterSwitch.renderBadge("allSt");
-    });

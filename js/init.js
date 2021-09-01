@@ -27,9 +27,9 @@ const filterSwitch = {
         pressMe(theFilter) {
           this.switch.all[0] = false;
           this.switch[theFilter][0] = !this.switch[theFilter][0];
-          if (theFilter === "vegetarian") {
+          if (theFilter === "vegetarian" && this.switch["vegan"][0] === true) {
             this.switch["vegan"][0] = !this.switch[theFilter][0];
-          } else if (theFilter === "vegan") {
+          } else if (theFilter === "vegan" && this.switch["vegetarian"][0] === true) {
             this.switch["vegetarian"][0] = !this.switch[theFilter][0];
           }
         },
