@@ -3,6 +3,17 @@ const localURL = "http://localhost:3000/";
 const loadingText = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 const errorText = '<span style="color:red"><b>Error! please try again later...</b></span>';
 
+
+//let userId = Math.floor(Math.random()*6)+1; // random user scenario  userId =1 to 6
+const config = {
+  jokeEnable: false,
+  fixUserMode: true 
+};
+
+const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
+
+
+
 const filter = (function() {
 const filterSwitch = {
         switch: {

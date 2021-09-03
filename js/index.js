@@ -3,31 +3,22 @@
 /* 
 To do :
 
-fixed error word clear up when move to other section
 favourite button
-comment
+comments
 ingredient multiplier
 
 */
 
 (() => {
-  //config
-
-  const config = {
-    jokeEnable: false,
-  };
-  const searchFoodBtn = document.getElementById("searchFood");
-  const searchText = document.getElementById("searchText");
+  
+  const searchFoodBtn = document.getElementById("search-food");
+  const searchText = document.getElementById("search-text");
   const resultList = document.getElementById("result-list");
   const recipeInfo = document.getElementById("recipe-info");
-  //const spinner = document.getElementById("spinner");
-  //const alert = document.getElementById("alert");
   const loadMoreBtn = document.createElement("button");
-  const closeContent = document.getElementById("closeContent");
+  const closeContent = document.getElementById("close-content");
   const infoBox = document.getElementById("info-box");
   const topInfoBox = document.getElementById("top-info-box");
-  //const spinnerTop = document.getElementById("spinner-top");
-  //const alertTop = document.getElementById("alert-top");
   const home = document.getElementById("home");
   const advance = document.getElementById("advance");
   const tools = document.getElementById("tools");
@@ -249,7 +240,7 @@ ingredient multiplier
   }
   //render individual recipe
   function renderRecipe(data) {
-    //alert.style.visibility = "collapse";
+    
     fzTool.displayText(loadingBottom, "");
     closeContent.style.visibility = "visible";
     const imageDiv = document.createElement("div"); //image wrapper
@@ -565,4 +556,8 @@ ingredient multiplier
   }
 
   renderHome();
+
+  //test
+  //console.log(localFn.getUserName(1));
+
 })();

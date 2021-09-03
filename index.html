@@ -58,7 +58,7 @@
           </button>
         </div>
       </form>
-      
+      <!-- tools section-->
       <div id="tool-box" class="container-fluid pt-20p pt-45">
         <div class="row">
           <div class="col-sm-6">
@@ -145,33 +145,23 @@
           </div>
         </div>
       </div>
-      
+      <!-- top notify area -->
       <div id="top-info-box" class="container-fluid text-center">
         <div id="notified-text"></div>
-        <!-- notifed text eg. search text validation-->
-        <!--div id="spinner-top" class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div-->
         <p id="loading-top"></p>
-        <!--div id="alert-top" class="alert alert-danger" role="alert">
-          An error occurs, please try again later!
-        </div-->
       </div>
       <div class="container-fluid text-center">
         <button id="closeContent" class="btn-lg btn-light">Close-[X]</button>
       </div>
       <!-- an individual recipe -->
-      <div id="recipe-info" class="container-fluid"></div>
+      <div id="recipe-info" class="container-fluid">
+        <div id="recipe-comments"></div>
+      </div>
       <!-- recipes list-->
       <div id="result-list" class="container-fluid text-center"></div>
+      <!-- bottom notify area -->
       <div id="info-box" class="text-center alert-float">
-        <!--div id="spinner" class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div-->
-        <p id="loading-bottom"></p>
-        <!--div id="alert" class="alert alert-danger" role="alert">
-          An error occurs, please try again later!
-        </div-->
+        <p id="loading-bottom"></p>     
       </div>
       <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
@@ -182,6 +172,7 @@
     <script src="./js/init.js" defer></script>
     <script src="./js/tools.js" defer></script>
     <script src="./js/ingredients.js" defer></script>
+    <script src="./js/local.js" defer></script>
     <script src="./js/apiKey.js" defer></script>
     <script src="./js/index.js" defer></script>
   </body>
