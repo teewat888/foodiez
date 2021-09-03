@@ -2,16 +2,58 @@
   "comments": [
     {
       "id": 1,
-      "recipeId":662744,
-      "body": [{
-        "text": "test comment",
-        "users": 
-          {
-            "id": 1,
-            "userName": "user007"
-          }
-          }
-          ]
+      "recipeId": 662744,
+      "body": {
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor",
+        "user": {
+          "id": 1,
+          "userName": "user007"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "recipeId": 662744,
+      "body": {
+        "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,",
+        "user": {
+          "id": 2,
+          "userName": "Peter"
+        }
+      }
+    },
+    {
+      "recipeId": 1460497,
+      "body": {
+        "text": "This is a test comment",
+        "user": {
+          "id": 2,
+          "userName": "Peter"
+        }
+      },
+      "id": 3
+    },
+    {
+      "recipeId": 1098304,
+      "body": {
+        "text": "This is so yummy",
+        "user": {
+          "id": 5,
+          "userName": "Adam"
+        }
+      },
+      "id": 4
+    },
+    {
+      "recipeId": 662744,
+      "body": {
+        "text": "so delicious",
+        "user": {
+          "id": 5,
+          "userName": "Adam"
+        }
+      },
+      "id": 5
     }
   ],
   "favourite": [

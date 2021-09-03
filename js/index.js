@@ -10,7 +10,6 @@ ingredient multiplier
 */
 
 (() => {
-  
   const searchFoodBtn = document.getElementById("search-food");
   const searchText = document.getElementById("search-text");
   const resultList = document.getElementById("result-list");
@@ -34,6 +33,18 @@ ingredient multiplier
   let unit = "us"; // default unit of ingredients
   let ingredients = {}; // object to store ingredients
   let avdSearch = false;
+
+  const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
+  const user = [];
+  user.push(userId);
+  
+  let name = localFn.getUserName;
+  
+  localFn.getUserName(userId).then(name => user.push(name));
+  
+  //console.log(user);
+
+
   searchFoodBtn.style.marginTop = "24px";
   //events listener
   home.addEventListener("click", () => {
@@ -46,6 +57,7 @@ ingredient multiplier
     toolBox.style.display = "none";
     advanceSearch.style.display = "none";
     resultList.style.display = "block";
+    
   });
 
   advance.addEventListener("click", () => {
@@ -240,7 +252,6 @@ ingredient multiplier
   }
   //render individual recipe
   function renderRecipe(data) {
-    
     fzTool.displayText(loadingBottom, "");
     closeContent.style.visibility = "visible";
     const imageDiv = document.createElement("div"); //image wrapper
@@ -249,6 +260,9 @@ ingredient multiplier
     const ingredientsDiv = document.createElement("div");
     const methodDiv = document.createElement("div");
     const nutritionDiv = document.createElement("div");
+    const recipeComments = document.createElement("div");
+    const recipeForm = document.createElement('div');
+
 
     if (data.image === undefined) {
       data.image = "https://spoonacular.com/recipeImages/606953-556x370.jpg";
@@ -274,7 +288,13 @@ ingredient multiplier
     nutritionDiv.innerHTML = `<h6><b>Nutrition Information</b></h6>
       <div id="nutritionText"></div>`;
 
-    dietDiv.append(ingredientsDiv, methodDiv, nutritionDiv);
+    recipeForm.setAttribute('class','mb-3');
+    recipeForm.innerHTML = `<textarea class="form-control" id="comment-input" rows="3"></textarea>
+    </br><button id="comment-submit" class="btn btn-sm btn-primary">submit</button>`;
+
+    recipeComments.setAttribute('class','pt-05');
+
+    dietDiv.append(ingredientsDiv, methodDiv, nutritionDiv, recipeComments, recipeForm);
     infoDiv.appendChild(dietDiv);
 
     imageDiv.append(infoDiv);
@@ -303,6 +323,14 @@ ingredient multiplier
     ingredientsText.innerHTML = renderIngredients(data);
     methodsText.innerHTML = renderMethods(data);
     nutritionText.innerHTML = renderNutrition(data);
+    localFn.renderComments(data, recipeComments);
+    const commentInput = document.getElementById("comment-input");
+    const btnComment = document.getElementById("comment-submit");
+    btnComment.addEventListener('click', (e) => {
+      e.preventDefault();
+      localFn.addComment(data, recipeComments, commentInput.value, user);
+    })
+
   }
 
   //render badge
@@ -559,5 +587,4 @@ ingredient multiplier
 
   //test
   //console.log(localFn.getUserName(1));
-
 })();

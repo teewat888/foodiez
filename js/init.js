@@ -7,12 +7,8 @@ const errorText = '<span style="color:red"><b>Error! please try again later...</
 //let userId = Math.floor(Math.random()*6)+1; // random user scenario  userId =1 to 6
 const config = {
   jokeEnable: false,
-  fixUserMode: true 
+  fixUserMode: false 
 };
-
-const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
-
-
 
 const filter = (function() {
 const filterSwitch = {
