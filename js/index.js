@@ -4,7 +4,7 @@
 To do :
 
 favourite button
-comments
+
 ingredient multiplier
 
 */
@@ -15,7 +15,7 @@ ingredient multiplier
   const resultList = document.getElementById("result-list");
   const recipeInfo = document.getElementById("recipe-info");
   const loadMoreBtn = document.createElement("button");
-  const closeContent = document.getElementById("close-content");
+  //const closeContent = document.getElementById("close-content");
   const infoBox = document.getElementById("info-box");
   const topInfoBox = document.getElementById("top-info-box");
   const home = document.getElementById("home");
@@ -27,7 +27,8 @@ ingredient multiplier
   const advanceSearch = document.getElementById("advance-search");
   const loadingTop = document.getElementById("loading-top");
   const loadingBottom = document.getElementById("loading-bottom");
-
+  const iCaption = document.getElementById("i-caption");
+  iCaption.style.display = "none";
   let number = 18; //number of result per fetch
   let offset = 0; // offset for pagination
   let unit = "us"; // default unit of ingredients
@@ -37,12 +38,13 @@ ingredient multiplier
   const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
   const user = [];
   user.push(userId);
-  
+  let aName = '';
   let name = localFn.getUserName;
   
   localFn.getUserName(userId).then(name => user.push(name));
+  //localFn.getUserName(userId).then(name => {aName = name; console.log(aName); console.log(name);})
   
-  //console.log(user);
+  //console.log(''aName);
 
 
   searchFoodBtn.style.marginTop = "24px";
@@ -64,6 +66,9 @@ ingredient multiplier
     avdSearch = true;
     // notifiedText.style.display = "none";
     navActive("advance");
+    iCaption.style.display = "block";
+    resultList.style.display = "block";
+    recipeInfo.style.display = "block";
     searchFoodBtn.style.marginTop = "0px";
     toolBox.style.display = "none";
     searchForm.style.display = "block";
@@ -133,12 +138,13 @@ ingredient multiplier
     fetchList(searchText.value);
   });
 
-  closeContent.addEventListener("click", closeRecipe);
+  //closeContent.addEventListener("click", closeRecipe);
 
   const cardEvent = (card, id) => {
     card.addEventListener("click", () => {
       //spinner.style.visibility = "visible";
       fzTool.displayText(loadingBottom, loadingText);
+      
       resultList.style.visibility = "hidden";
       document.documentElement.scrollTop = 0;
       fzTool.displayText(loadingTop, loadingText);
@@ -180,10 +186,14 @@ ingredient multiplier
 
   //functions
   function closeRecipe() {
-    while (recipeInfo.firstChild) {
+    /*while (recipeInfo.firstChild) {
+      console.log('remove : ',recipeInfo.firstChild );
       recipeInfo.removeChild(recipeInfo.firstChild);
-    }
-    closeContent.style.visibility = "hidden";
+      
+    }*/
+    iCaption.style.display = "none";
+    iCaption.innerHTML = '';
+    //closeContent.style.visibility = "hidden";
     topInfoBox.style.height = "0";
     resultList.style.visibility = "visible";
   }
@@ -253,8 +263,9 @@ ingredient multiplier
   //render individual recipe
   function renderRecipe(data) {
     fzTool.displayText(loadingBottom, "");
-    closeContent.style.visibility = "visible";
-    const imageDiv = document.createElement("div"); //image wrapper
+    //closeContent.style.visibility = "visible";
+    //const imageDiv = document.createElement("div"); //image wrapper
+    const imageDiv = document.createElement("img");
     const infoDiv = document.createElement("div"); // info wrapper  (info - diet,ingredients,methods,nutrition)
     const dietDiv = document.createElement("div");
     const ingredientsDiv = document.createElement("div");
@@ -262,16 +273,24 @@ ingredient multiplier
     const nutritionDiv = document.createElement("div");
     const recipeComments = document.createElement("div");
     const recipeForm = document.createElement('div');
+    const closeContent = document.createElement("div");
+    iCaption.style.display = "block";
+    closeContent.innerHTML= '<p class="card-text closeBtnRight" >'+data.title+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X</p>';
+    closeContent.setAttribute('class','card-body');
 
+    //imageDiv.innerHTML = '';
 
     if (data.image === undefined) {
       data.image = "https://spoonacular.com/recipeImages/606953-556x370.jpg";
     }
-    imageDiv.setAttribute("class", "text-center pt-10");
-    imageDiv.innerHTML = `
-        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>`;
-
-    infoDiv.setAttribute("class", "pt-20p");
+    //imageDiv.setAttribute("class", "text-center pt-10");
+    /*imageDiv.innerHTML = `
+        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>`;*/
+        imageDiv.setAttribute("class", "card-img-bottom");
+        imageDiv.setAttribute("src", data.image);
+        console.log(imageDiv);
+    
+    //infoDiv.setAttribute("class", "pt-20p");
     infoDiv.setAttribute("style", "text-align:left");
 
     dietDiv.innerHTML = `<div id="diet-text"></div>`;
@@ -296,9 +315,15 @@ ingredient multiplier
 
     dietDiv.append(ingredientsDiv, methodDiv, nutritionDiv, recipeComments, recipeForm);
     infoDiv.appendChild(dietDiv);
-
-    imageDiv.append(infoDiv);
-    recipeInfo.appendChild(imageDiv);
+    closeContent.append(imageDiv);
+    iCaption.appendChild(closeContent);
+   //); iCaption.appendChild(imageDiv);
+    
+    iCaption.append(infoDiv);
+    //imageDiv.append(infoDiv);
+    //recipeInfo.appendChild(imageDiv);
+    recipeInfo.appendChild(iCaption);
+    //recipeInfo.appendChild(infoDiv);
 
     const dietText = document.getElementById("diet-text");
     const ingredientsText = document.getElementById("ingredientsText");
@@ -326,6 +351,8 @@ ingredient multiplier
     localFn.renderComments(data, recipeComments);
     const commentInput = document.getElementById("comment-input");
     const btnComment = document.getElementById("comment-submit");
+    closeContent.addEventListener("click", closeRecipe);
+
     btnComment.addEventListener('click', (e) => {
       e.preventDefault();
       localFn.addComment(data, recipeComments, commentInput.value, user);
@@ -403,7 +430,7 @@ ingredient multiplier
             <div class="col-1 green-n">${el.percentOfDailyNeeds}%</div>`;
       }
     });
-    nutritionText += "</div>";
+    nutritionText += "</div><h6 class=\"pt-05\"><b>Comments</b></h6>";
     return nutritionText;
   }
 
@@ -584,7 +611,7 @@ ingredient multiplier
   }
 
   renderHome();
-
+  //closeRecipe();
   //test
   //console.log(localFn.getUserName(1));
 })();

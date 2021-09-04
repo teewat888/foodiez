@@ -51,7 +51,7 @@ const localFn = (() => {
 
   }
   const renderComments = (dataIn, element) => {
-    let result = "<h6><b>Comments</b></h6>";
+    let result = "";
     //search comments
     fetch(localURL + "comments")
       .then((resp) => resp.json())
