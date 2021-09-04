@@ -1,7 +1,7 @@
 // module to due with all local servers functional
 
 const localFn = (() => {
-  const getUserName = (userId) => {
+  const getUserName = (userId, user) => {
     return fetch(localURL + "users")
       .then((resp) => resp.json())
       .then((data) => {
@@ -9,9 +9,9 @@ const localFn = (() => {
         const iName = data.find((el) => el.id === userId);
         //console.log("iName ", iName);
         if (iName === -1) {
-          return "error";
+          return user.push('error');
         } else {
-          return iName.userName;
+          return user.push(iName.userName);
         }
       })
       .catch((e) => {

@@ -38,13 +38,13 @@ ingredient multiplier
   const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
   const user = [];
   user.push(userId);
-  let aName = '';
-  let name = localFn.getUserName;
-  
-  localFn.getUserName(userId).then(name => user.push(name));
+  //let aName = '';
+  //let name = localFn.getUserName;
+  localFn.getUserName(userId,user);
+  //localFn.getUserName(userId).then(name => user.push(name));
   //localFn.getUserName(userId).then(name => {aName = name; console.log(aName); console.log(name);})
   
-  //console.log(''aName);
+  
 
 
   searchFoodBtn.style.marginTop = "24px";
@@ -83,6 +83,7 @@ ingredient multiplier
     recipeInfo.style.display = "none";
     resultList.style.display = "none";
     toolBox.style.display = "block";
+    
   });
 
   const attachEventBg = () => {
@@ -144,7 +145,7 @@ ingredient multiplier
     card.addEventListener("click", () => {
       //spinner.style.visibility = "visible";
       fzTool.displayText(loadingBottom, loadingText);
-      
+      console.log('clicked recipe id: ',id);
       resultList.style.visibility = "hidden";
       document.documentElement.scrollTop = 0;
       fzTool.displayText(loadingTop, loadingText);
@@ -191,6 +192,7 @@ ingredient multiplier
       recipeInfo.removeChild(recipeInfo.firstChild);
       
     }*/
+    console.log("clicked close content");
     iCaption.style.display = "none";
     iCaption.innerHTML = '';
     //closeContent.style.visibility = "hidden";
@@ -274,8 +276,10 @@ ingredient multiplier
     const recipeComments = document.createElement("div");
     const recipeForm = document.createElement('div');
     const closeContent = document.createElement("div");
+    //const frameDiv = document.createElement("div");
     iCaption.style.display = "block";
     closeContent.innerHTML= '<p class="card-text closeBtnRight" >'+data.title+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X</p>';
+    //closeContent.setAttribute('class','card-body');
     closeContent.setAttribute('class','card-body');
 
     //imageDiv.innerHTML = '';
@@ -324,7 +328,7 @@ ingredient multiplier
     //recipeInfo.appendChild(imageDiv);
     recipeInfo.appendChild(iCaption);
     //recipeInfo.appendChild(infoDiv);
-
+    //const closeContent = document.getElementById('closeContent');
     const dietText = document.getElementById("diet-text");
     const ingredientsText = document.getElementById("ingredientsText");
     const methodsText = document.getElementById("methodsText");
@@ -560,6 +564,11 @@ ingredient multiplier
   }
 
   function fetchRecipe(id) {
+    if(config.devMode) {
+      console.log('fetch recipe local');
+      return fetch(localURL + 'recipes').then(resp => resp.json());
+    }
+
     return fetch(
       baseURL +
         `recipes/${id}/information?apiKey=${apiKey}&instructionsRequired=true&includeNutrition=true`
@@ -580,7 +589,26 @@ ingredient multiplier
     }
 
     console.log(query);
+    if(config.devMode) {
+      console.log('fetch list local');
+      return fetch(localURL + 'lists').then(resp => resp.json())
+      .then((data) => {
+        if (data.totalResults === 0) {
+          fzTool.displayText(
+            notifiedText,
+            `<span style='color:red'>${notFoundText}</span>`
+          );
+        }
 
+        fzTool.displayText(loadingBottom, "");
+             renderList(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        fzTool.displayText(loadingBottom, errorText);
+      });
+    } //end local dev
+     
     return fetch(
       baseURL +
         `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
