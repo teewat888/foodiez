@@ -131,3 +131,10 @@ footer {
   font-size: xx-large;
   font-weight: bold;
 }
+.activated-heart {
+  color: red;
+}
+
+.hidden {
+  visibility: hidden;
+}

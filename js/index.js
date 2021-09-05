@@ -37,16 +37,9 @@ ingredient multiplier
 
   const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
   const user = [];
-  user.push(userId);
-  //let aName = '';
-  //let name = localFn.getUserName;
+  user.push(userId); // index 0 = id , index 1 = user name
   localFn.getUserName(userId,user);
-  //localFn.getUserName(userId).then(name => user.push(name));
-  //localFn.getUserName(userId).then(name => {aName = name; console.log(aName); console.log(name);})
-  
-  
-
-
+ 
   searchFoodBtn.style.marginTop = "24px";
   //events listener
   home.addEventListener("click", () => {
@@ -346,25 +339,33 @@ ingredient multiplier
         "btn btn-sm btn-outline-secondary active"
       );
     }
-    unitBtn(usBtn, metricBtn, data, ingredientsText); //register us button
-    unitBtn(metricBtn, usBtn, data, ingredientsText); // register metric button
-    dietText.innerHTML = renderDiet(data);
+    
+    dietText.innerHTML = renderDiet(data) + '<span class="like-glyph">&#x2661;</span>';
     ingredientsText.innerHTML = renderIngredients(data);
     methodsText.innerHTML = renderMethods(data);
     nutritionText.innerHTML = renderNutrition(data);
-    localFn.renderComments(data, recipeComments);
+    localFn.renderComments(data.id, recipeComments);
     const commentInput = document.getElementById("comment-input");
     const btnComment = document.getElementById("comment-submit");
-    closeContent.addEventListener("click", closeRecipe);
+    const spanHeart = document.querySelector('span.like-glyph');
 
+    //event listeners for the recipe
+    unitBtn(usBtn, metricBtn, data, ingredientsText); //register us event button
+    unitBtn(metricBtn, usBtn, data, ingredientsText); // register metric event button
+    console.log('current user ',user[1]);
+    localFn.checkFavorite(spanHeart,data.id,user[0],user[1],'render'); //check current user fav?
+    closeContent.addEventListener("click", closeRecipe);
+    spanHeart.addEventListener('click', () => {
+      localFn.checkFavorite(spanHeart,data.id,user[0],user[1],'toggle');
+    })
     btnComment.addEventListener('click', (e) => {
       e.preventDefault();
-      localFn.addComment(data, recipeComments, commentInput.value, user);
+      localFn.addComment(data.id, recipeComments, commentInput.value, user);
     })
 
   }
 
-  //render badge
+  //render badge style
   function renderBadge(diet, color, active) {
     let badge = "";
     if (active === true) {
@@ -374,7 +375,7 @@ ingredient multiplier
     }
     return badge;
   }
-  //render diet
+  //render diet badges
   function renderDiet(data) {
     let dietText = "";
     vegetarianBadge = data.vegetarian

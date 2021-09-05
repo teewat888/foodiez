@@ -8,7 +8,7 @@ const errorText = '<span style="color:red"><b>Error! please try again later...</
 const config = {
   jokeEnable: false,
   fixUserMode: false,
-  devMode: true 
+  devMode: false 
 };
 
 const filter = (function() {
