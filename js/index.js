@@ -3,7 +3,7 @@
 /* 
 To do :
 
-favourite button
+
 
 ingredient multiplier
 
@@ -35,29 +35,26 @@ ingredient multiplier
   let ingredients = {}; // object to store ingredients
   let avdSearch = false;
 
-  const userId = (config.fixUserMode === true) ?  1 : localFn.generateUserId();
+  const userId = config.fixUserMode === true ? 1 : localFn.generateUserId();
   const user = [];
   user.push(userId); // index 0 = id , index 1 = user name
-  localFn.getUserName(userId,user);
- 
+  localFn.getUserName(userId, user);
+
   searchFoodBtn.style.marginTop = "24px";
   //events listener
   home.addEventListener("click", () => {
     avdSearch = false;
     navActive("home");
-    // notifiedText.style.display = "none";
     searchForm.style.display = "block";
     searchFoodBtn.style.marginTop = "24px";
     recipeInfo.style.display = "block";
     toolBox.style.display = "none";
     advanceSearch.style.display = "none";
     resultList.style.display = "block";
-    
   });
 
   advance.addEventListener("click", () => {
     avdSearch = true;
-    // notifiedText.style.display = "none";
     navActive("advance");
     iCaption.style.display = "block";
     resultList.style.display = "block";
@@ -71,12 +68,10 @@ ingredient multiplier
   });
   tools.addEventListener("click", () => {
     navActive("tools");
-    //  notifiedText.style.display = "none";
     searchForm.style.display = "none";
     recipeInfo.style.display = "none";
     resultList.style.display = "none";
     toolBox.style.display = "block";
-    
   });
 
   const attachEventBg = () => {
@@ -127,38 +122,28 @@ ingredient multiplier
 
   loadMoreBtn.addEventListener("click", () => {
     offset = offset + number;
-    //spinner.style.visibility = "visible";
     fzTool.displayText(loadingBottom, loadingText);
     fetchList(searchText.value);
   });
 
-  //closeContent.addEventListener("click", closeRecipe);
-
   const cardEvent = (card, id) => {
     card.addEventListener("click", () => {
-      //spinner.style.visibility = "visible";
       fzTool.displayText(loadingBottom, loadingText);
-      console.log('clicked recipe id: ',id);
+      console.log("clicked recipe id: ", id);
       resultList.style.visibility = "hidden";
       document.documentElement.scrollTop = 0;
       fzTool.displayText(loadingTop, loadingText);
       fetchRecipe(id)
         .then((data) => {
-          //console.log(data);
           infoBox.style.visibility = "collapse";
-          //spinner.style.visibility = "collapse";
           fzTool.displayText(loadingBottom, "");
-          //alert.style.visibility = "collapse";
           topInfoBox.style.height = "0";
-          //spinnerTop.style.visibility = "collapse";
-          // alertTop.style.visibility = "collapse";
           fzTool.displayText(loadingTop, "");
 
           renderRecipe(data);
         })
         .catch((e) => {
           console.log(e);
-          //alertTop.style.visibility = "visible";
           fzTool.displayText(loadingTop, errorText);
         });
     });
@@ -180,14 +165,9 @@ ingredient multiplier
 
   //functions
   function closeRecipe() {
-    /*while (recipeInfo.firstChild) {
-      console.log('remove : ',recipeInfo.firstChild );
-      recipeInfo.removeChild(recipeInfo.firstChild);
-      
-    }*/
     console.log("clicked close content");
     iCaption.style.display = "none";
-    iCaption.innerHTML = '';
+    iCaption.innerHTML = "";
     //closeContent.style.visibility = "hidden";
     topInfoBox.style.height = "0";
     resultList.style.visibility = "visible";
@@ -258,8 +238,6 @@ ingredient multiplier
   //render individual recipe
   function renderRecipe(data) {
     fzTool.displayText(loadingBottom, "");
-    //closeContent.style.visibility = "visible";
-    //const imageDiv = document.createElement("div"); //image wrapper
     const imageDiv = document.createElement("img");
     const infoDiv = document.createElement("div"); // info wrapper  (info - diet,ingredients,methods,nutrition)
     const dietDiv = document.createElement("div");
@@ -267,27 +245,22 @@ ingredient multiplier
     const methodDiv = document.createElement("div");
     const nutritionDiv = document.createElement("div");
     const recipeComments = document.createElement("div");
-    const recipeForm = document.createElement('div');
+    const recipeForm = document.createElement("div");
     const closeContent = document.createElement("div");
-    //const frameDiv = document.createElement("div");
     iCaption.style.display = "block";
-    closeContent.innerHTML= '<p class="card-text closeBtnRight" >'+data.title+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X</p>';
-    //closeContent.setAttribute('class','card-body');
-    closeContent.setAttribute('class','card-body');
-
-    //imageDiv.innerHTML = '';
+    closeContent.innerHTML =
+      '<p class="card-text closeBtnRight" >' +
+      data.title +
+      "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X</p>";
+    closeContent.setAttribute("class", "card-body");
 
     if (data.image === undefined) {
       data.image = "https://spoonacular.com/recipeImages/606953-556x370.jpg";
     }
-    //imageDiv.setAttribute("class", "text-center pt-10");
-    /*imageDiv.innerHTML = `
-        <img alt="${data.title}" src="${data.image}" class="rounded" /><br><h3>${data.title}</h3>`;*/
-        imageDiv.setAttribute("class", "card-img-bottom");
-        imageDiv.setAttribute("src", data.image);
-        console.log(imageDiv);
-    
-    //infoDiv.setAttribute("class", "pt-20p");
+    imageDiv.setAttribute("class", "card-img-bottom");
+    imageDiv.setAttribute("src", data.image);
+    console.log(imageDiv);
+
     infoDiv.setAttribute("style", "text-align:left");
 
     dietDiv.innerHTML = `<div id="diet-text"></div>`;
@@ -304,24 +277,25 @@ ingredient multiplier
     nutritionDiv.innerHTML = `<h6><b>Nutrition Information</b></h6>
       <div id="nutritionText"></div>`;
 
-    recipeForm.setAttribute('class','mb-3');
+    recipeForm.setAttribute("class", "mb-3");
     recipeForm.innerHTML = `<textarea class="form-control" id="comment-input" rows="3"></textarea>
     </br><button id="comment-submit" class="btn btn-sm btn-primary">submit</button>`;
 
-    recipeComments.setAttribute('class','pt-05');
+    recipeComments.setAttribute("class", "pt-05");
 
-    dietDiv.append(ingredientsDiv, methodDiv, nutritionDiv, recipeComments, recipeForm);
+    dietDiv.append(
+      ingredientsDiv,
+      methodDiv,
+      nutritionDiv,
+      recipeComments,
+      recipeForm
+    );
     infoDiv.appendChild(dietDiv);
     closeContent.append(imageDiv);
     iCaption.appendChild(closeContent);
-   //); iCaption.appendChild(imageDiv);
-    
+
     iCaption.append(infoDiv);
-    //imageDiv.append(infoDiv);
-    //recipeInfo.appendChild(imageDiv);
     recipeInfo.appendChild(iCaption);
-    //recipeInfo.appendChild(infoDiv);
-    //const closeContent = document.getElementById('closeContent');
     const dietText = document.getElementById("diet-text");
     const ingredientsText = document.getElementById("ingredientsText");
     const methodsText = document.getElementById("methodsText");
@@ -339,30 +313,30 @@ ingredient multiplier
         "btn btn-sm btn-outline-secondary active"
       );
     }
-    
-    dietText.innerHTML = renderDiet(data) + '<span class="like-glyph">&#x2661;</span>';
+
+    dietText.innerHTML =
+      renderDiet(data) + '<span class="like-glyph">&#x2661;</span>';
     ingredientsText.innerHTML = renderIngredients(data);
     methodsText.innerHTML = renderMethods(data);
     nutritionText.innerHTML = renderNutrition(data);
     localFn.renderComments(data.id, recipeComments);
     const commentInput = document.getElementById("comment-input");
     const btnComment = document.getElementById("comment-submit");
-    const spanHeart = document.querySelector('span.like-glyph');
+    const spanHeart = document.querySelector("span.like-glyph");
 
     //event listeners for the recipe
     unitBtn(usBtn, metricBtn, data, ingredientsText); //register us event button
     unitBtn(metricBtn, usBtn, data, ingredientsText); // register metric event button
-    console.log('current user ',user[1]);
-    localFn.checkFavorite(spanHeart,data.id,user[0],user[1],'render'); //check current user fav?
+    console.log("current user ", user[1]);
+    localFn.checkFavorite(spanHeart, data.id, user[0], user[1], "render"); //check current user fav?
     closeContent.addEventListener("click", closeRecipe);
-    spanHeart.addEventListener('click', () => {
-      localFn.checkFavorite(spanHeart,data.id,user[0],user[1],'toggle');
-    })
-    btnComment.addEventListener('click', (e) => {
+    spanHeart.addEventListener("click", () => {
+      localFn.checkFavorite(spanHeart, data.id, user[0], user[1], "toggle");
+    });
+    btnComment.addEventListener("click", (e) => {
       e.preventDefault();
       localFn.addComment(data.id, recipeComments, commentInput.value, user);
-    })
-
+    });
   }
 
   //render badge style
@@ -405,8 +379,6 @@ ingredient multiplier
   //render Nutrition
   function renderNutrition(data) {
     let nutritionText = "";
-    //const nutritionDiv = document.createElement("div");
-    //nutritionDiv.setAttribute("class", "row row-col-3");
     nutritionText = '<div class="row row-col-4">';
     data.nutrition.nutrients.forEach((el, index, array) => {
       if (index < 8) {
@@ -435,7 +407,7 @@ ingredient multiplier
             <div class="col-1 green-n">${el.percentOfDailyNeeds}%</div>`;
       }
     });
-    nutritionText += "</div><h6 class=\"pt-05\"><b>Comments</b></h6>";
+    nutritionText += '</div><h6 class="pt-05"><b>Comments</b></h6>';
     return nutritionText;
   }
 
@@ -485,11 +457,8 @@ ingredient multiplier
 
   //render recipes
   function renderList(data) {
-    //alert.style.visibility = "collapse";
     fzTool.displayText(loadingBottom, "");
     fzTool.displayText(loadingTop, "");
-    //alertTop.style.visibility = "collapse";
-    //spinnerTop.style.visibility = "collapse";
     topInfoBox.style.height = "0";
 
     const totalResults = data.totalResults;
@@ -565,9 +534,9 @@ ingredient multiplier
   }
 
   function fetchRecipe(id) {
-    if(config.devMode) {
-      console.log('fetch recipe local');
-      return fetch(localURL + 'recipes').then(resp => resp.json());
+    if (config.devMode) {
+      console.log("fetch recipe local");
+      return fetch(localURL + "recipes").then((resp) => resp.json());
     }
 
     return fetch(
@@ -590,26 +559,27 @@ ingredient multiplier
     }
 
     console.log(query);
-    if(config.devMode) {
-      console.log('fetch list local');
-      return fetch(localURL + 'lists').then(resp => resp.json())
-      .then((data) => {
-        if (data.totalResults === 0) {
-          fzTool.displayText(
-            notifiedText,
-            `<span style='color:red'>${notFoundText}</span>`
-          );
-        }
+    if (config.devMode) {
+      console.log("fetch list local");
+      return fetch(localURL + "lists")
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.totalResults === 0) {
+            fzTool.displayText(
+              notifiedText,
+              `<span style='color:red'>${notFoundText}</span>`
+            );
+          }
 
-        fzTool.displayText(loadingBottom, "");
-             renderList(data);
-      })
-      .catch((e) => {
-        console.log(e);
-        fzTool.displayText(loadingBottom, errorText);
-      });
+          fzTool.displayText(loadingBottom, "");
+          renderList(data);
+        })
+        .catch((e) => {
+          console.log(e);
+          fzTool.displayText(loadingBottom, errorText);
+        });
     } //end local dev
-     
+
     return fetch(
       baseURL +
         `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
@@ -617,30 +587,20 @@ ingredient multiplier
       .then((resp) => resp.json())
       .then((data) => {
         if (data.totalResults === 0) {
-          // notifiedText.style.display = "block";
           fzTool.displayText(
             notifiedText,
             `<span style='color:red'>${notFoundText}</span>`
           );
         }
 
-        //spinner.style.visibility = "collapse";
         fzTool.displayText(loadingBottom, "");
-        //infoBox.style.height = "0";
-        //alert.style.visibility = "collapse";
-
         renderList(data);
       })
       .catch((e) => {
         console.log(e);
-        //alert.style.visibility = "visible";
         fzTool.displayText(loadingBottom, errorText);
-        //spinner.style.visibility = "collapse";
       });
   }
 
   renderHome();
-  //closeRecipe();
-  //test
-  //console.log(localFn.getUserName(1));
 })();
