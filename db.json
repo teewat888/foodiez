@@ -140,6 +140,17 @@
         }
       },
       "id": 13
+    },
+    {
+      "recipeId": 715382,
+      "body": {
+        "text": "This is so yummy",
+        "user": {
+          "id": 5,
+          "userName": "Adam"
+        }
+      },
+      "id": 14
     }
   ],
   "favorite": [
@@ -200,6 +211,15 @@
         {
           "id": 1,
           "userName": "user007"
+        }
+      ]
+    },
+    {
+      "id": 715382,
+      "users": [
+        {
+          "id": 5,
+          "userName": "Adam"
         }
       ]
     }

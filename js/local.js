@@ -1,3 +1,4 @@
+"USE STRICT";
 // module to due with all local servers functional
 const localFn = (() => {
   const EMPTY_HEART = "♡";

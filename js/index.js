@@ -1,10 +1,6 @@
 "USE STRICT";
-
 /* 
 To do :
-
-
-
 ingredient multiplier
 
 */
@@ -110,9 +106,13 @@ ingredient multiplier
 
   searchText.addEventListener("keyup", (e) => {
     e.preventDefault();
+    /*
+    console.log('press enter 1');
     if (e.key === "Enter") {
-      searchAction();
-    }
+      console.log('press enter inside');
+      searchFoodBtn.click();
+    } 
+    */
   });
 
   searchFoodBtn.addEventListener("click", (e) => {
@@ -197,6 +197,7 @@ ingredient multiplier
 
   //handle search action
   function searchAction() {
+    console.log('do search action');
     offset = 0;
     clearTags();
     closeRecipe();
@@ -234,6 +235,7 @@ ingredient multiplier
     while (resultList.firstChild) {
       resultList.removeChild(resultList.firstChild);
     }
+    resultList.innerHTML = '';
   }
   //render individual recipe
   function renderRecipe(data) {
@@ -471,7 +473,7 @@ ingredient multiplier
     });
 
     resultList.appendChild(list);
-
+    console.log('render list');
     loadMore(totalResults);
   }
   //image card render for render list
@@ -558,7 +560,7 @@ ingredient multiplier
         "We can not find any food you like, please try something like pasta :)";
     }
 
-    console.log(query);
+    console.log('display query in fetch list ',query);
     if (config.devMode) {
       console.log("fetch list local");
       return fetch(localURL + "lists")
@@ -580,7 +582,7 @@ ingredient multiplier
         });
     } //end local dev
 
-    return fetch(
+    fetch(
       baseURL +
         `recipes/complexSearch?apiKey=${apiKey}&query=${query}&number=${number}&offset=${offset}`
     )
@@ -594,7 +596,9 @@ ingredient multiplier
         }
 
         fzTool.displayText(loadingBottom, "");
+        console.log('fetch list');
         renderList(data);
+        
       })
       .catch((e) => {
         console.log(e);
