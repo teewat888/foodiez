@@ -1,11 +1,11 @@
 "USE STRICT";
 /* 
-To do :
+To do
 ingredient multiplier
 
 */
 
-(() => {
+((fzTool, localFn, filter) => {
   const searchFoodBtn = document.getElementById("search-food");
   const searchText = document.getElementById("search-text");
   const resultList = document.getElementById("result-list");
@@ -607,4 +607,4 @@ ingredient multiplier
   }
 
   renderHome();
-})();
+})(fzTool, localFn, filter);

@@ -1,5 +1,5 @@
 //iffe - tools section
-const fzTool = (() => {
+const fzTool = ((myIngredient) => {
   const inputSubstitute = document.getElementById("input-substitute");
   const btnSubstitute = document.getElementById("btn-substitute");
   const substituteText = document.getElementById("substitute-text");
@@ -359,4 +359,4 @@ const fzTool = (() => {
   return {
     displayText: displayText
   }
-})();
+})(myIngredient);
